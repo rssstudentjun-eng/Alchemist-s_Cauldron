@@ -1,0 +1,26 @@
+.shelf {
+  padding: 20px;
+  border: 2px solid black;
+}
+
+.shelfList {
+  display: flex;
+  justify-content: space-between;
+  align-self: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.shelfTitle {
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.shelfItem.isEmpty {
+  opacity: 0.5;
+
+  .shelfItemImage {
+    visibility: hidden;
+  }
+}
