@@ -1,6 +1,16 @@
 import { INGREDIENTS } from '../data/ingredients';
 import { shelfItem } from './shelfItem/shelf-item';
 import './shelf.scss';
+import { cauldronItemsMass, updateCauldron } from './cauldron';
+
+export function updateItemQuantity(ingredientID: string, newQuantity: number): void {
+  const item = document.getElementById(ingredientID);
+  const quantityElement = item?.querySelector('.shelfItemQuantity');
+
+  if (!quantityElement) return;
+
+  quantityElement.textContent = `Quantity: ${newQuantity}`;
+}
 
 export function createShelf(): HTMLElement {
   const shelfIngredients = document.createElement('div');
@@ -11,9 +21,29 @@ export function createShelf(): HTMLElement {
   shelfTitle.textContent = 'shelf';
 
   const shelfItems = INGREDIENTS.map((ingredient) => {
-    return shelfItem(ingredient);
-  });
+    let randomQuantity = Math.floor(Math.random() * 14) + 2;
 
+    const item = shelfItem(ingredient, randomQuantity);
+
+    const button = item.querySelector<HTMLButtonElement>('.shelfItemButton');
+    if (!button) {
+      return item;
+    }
+
+    item.addEventListener('click', () => {
+      updateItemQuantity(ingredient.id, randomQuantity);
+      console.log(`Clicked on ${ingredient.name}`);
+
+      randomQuantity -= 1;
+      updateItemQuantity(ingredient.id, randomQuantity);
+
+      cauldronItemsMass.push(ingredient.name);
+      updateCauldron();
+
+      button.disabled = randomQuantity === 0;
+    });
+    return item;
+  });
   const shelfList = document.createElement('ul');
   shelfList.classList.add('shelfList');
 
