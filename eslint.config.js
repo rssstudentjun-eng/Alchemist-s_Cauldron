@@ -8,8 +8,6 @@ export default defineConfig([
   {
     ignores: ['dist/**', 'node_modules/**'],
   },
-  prettierConfig,
-
   {
     files: ['**/*.{js,mjs,ts}'],
     extends: [js.configs.recommended, tseslint.configs.recommended],
@@ -33,4 +31,5 @@ export default defineConfig([
       globals: globals.node,
     },
   },
+  prettierConfig,
 ]);
