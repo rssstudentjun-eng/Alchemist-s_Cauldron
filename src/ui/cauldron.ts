@@ -1,41 +1,33 @@
 import './cauldron.scss';
+import { INGREDIENTS } from '../data/ingredients';
+import { state } from '../state/game-state';
 
-export const cauldronItemsMass: string[] = [];
-
-export function updateCauldron(): void {
-  const list = document.querySelector<HTMLUListElement>('.cauldronList');
-
-  if (!list) {
-    return;
-  }
-
-  const items = cauldronItemsMass.map((name) => {
-    const li = document.createElement('li');
-    li.textContent = name;
-    return li;
-  });
-
-  list.replaceChildren(...items);
-}
-
-export function createCauldron(): HTMLElement {
+export function createCauldron(onChange: () => void): HTMLElement {
   const cauldron = document.createElement('div');
+  cauldron.classList.add('cauldron');
 
   const cauldronTitle = document.createElement('h2');
   cauldronTitle.classList.add('cauldronTitle');
   cauldronTitle.textContent = 'Cauldron';
-  cauldron.appendChild(cauldronTitle);
 
   const cauldronList = document.createElement('ul');
   cauldronList.classList.add('cauldronList');
 
-  cauldronItemsMass.forEach((item) => {
+  state.cauldronIngredients.forEach((id) => {
     const li = document.createElement('li');
-    li.textContent = item;
+    li.textContent = INGREDIENTS.find((ingredient) => ingredient.id === id)?.name ?? id;
     cauldronList.appendChild(li);
   });
 
-  cauldron.classList.add('cauldron');
-  cauldron.appendChild(cauldronList);
+  const cleanButton = document.createElement('button');
+  cleanButton.type = 'button';
+  cleanButton.classList.add('cleanButton');
+  cleanButton.textContent = 'Clean Cauldron';
+  cleanButton.addEventListener('click', () => {
+    state.cauldronIngredients = [];
+    onChange();
+  });
+
+  cauldron.append(cauldronTitle, cleanButton, cauldronList);
   return cauldron;
 }

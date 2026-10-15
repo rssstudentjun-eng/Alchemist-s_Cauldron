@@ -1,11 +1,11 @@
-import causticAcid from '../assets/icons/causticAcid.png';
-import dragonTears from '../assets/icons/dragoneTears.png';
-import essenceOfTheVoid from '../assets/icons/essenseOfTheVoid.png';
-import fairyDust from '../assets/icons/fairyDust.png';
-import frostLotus from '../assets/icons/frostLotus.png';
-import mandrakeRoot from '../assets/icons/mandrakeRoot.png';
-import phoenixFeather from '../assets/icons/phoenixFeather.png';
-import toadSmile from '../assets/icons/toadSmile.png';
+import causticAcid from '../assets/icons/causticAcid.svg';
+import dragonTears from '../assets/icons/dragoneTears.svg';
+import essenceOfTheVoid from '../assets/icons/essenseOfTheVoid.svg';
+import fairyDust from '../assets/icons/fairyDust.svg';
+import frostLotus from '../assets/icons/frostLotus.svg';
+import mandrakeRoot from '../assets/icons/mandrakeRoot.svg';
+import phoenixFeather from '../assets/icons/phoenixFeather.svg';
+import toadSmile from '../assets/icons/toadSmile.svg';
 
 export interface Ingredient {
   id: string;

@@ -16,3 +16,11 @@
   font-size: 14px;
   text-transform: uppercase;
 }
+
+.shelfItem.isEmpty {
+  opacity: 0.5;
+
+  .shelfItemImage {
+    visibility: hidden;
+  }
+}

@@ -13,3 +13,24 @@
   font-size: 14px;
   text-transform: uppercase;
 }
+
+.shelfItemQuantity {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: white;
+  &.quantityZero {
+    background-color: gray;
+  }
+}
+.shelfItem.isEmpty {
+  opacity: 0.5;
+
+  .shelfItemImage {
+    visibility: hidden;
+  }
+}
+
+.shelfItemButton:disabled {
+  cursor: not-allowed;
+}

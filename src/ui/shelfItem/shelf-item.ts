@@ -1,13 +1,20 @@
 import type { Ingredient } from '../../data/ingredients';
 import './shelf-item.scss';
 
-export function shelfItem(ingredient: Ingredient, randomQuantity?: number): HTMLLIElement {
+export function shelfItem(
+  ingredient: Ingredient,
+  quantity: number,
+  isCauldronFull: boolean,
+): HTMLLIElement {
   const shelfItem = document.createElement('li');
   shelfItem.classList.add('shelfItem');
+  shelfItem.classList.toggle('isEmpty', quantity === 0);
   shelfItem.id = ingredient.id;
   const shelfItemImage = document.createElement('img');
 
   const shelButton = document.createElement('button');
+  shelButton.type = 'button';
+  shelButton.disabled = quantity === 0 || isCauldronFull;
   shelButton.classList.add('shelfItemButton');
 
   shelfItemImage.classList.add('shelfItemImage');
@@ -22,7 +29,9 @@ export function shelfItem(ingredient: Ingredient, randomQuantity?: number): HTML
 
   const shelfItemQuantity = document.createElement('p');
   shelfItemQuantity.classList.add('shelfItemQuantity');
-  shelfItemQuantity.textContent = `Quantity: ${randomQuantity}`;
+
+  shelfItemQuantity.textContent = `Quantity: ${quantity}`;
+  shelfItemQuantity.classList.toggle('quantityZero', quantity === 0);
   shelButton.append(shelfItemQuantity);
 
   const temperature = document.createElement('p');
