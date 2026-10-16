@@ -22,6 +22,7 @@ export function createCauldron(onChange: () => void): HTMLElement {
   // ========
   const cleanButton = document.createElement('button');
   cleanButton.type = 'button';
+  cleanButton.disabled = !state.isStarted || state.cauldronIngredients.length === 0;
   cleanButton.classList.add('cauldronButton');
   cleanButton.textContent = 'Clean Cauldron';
   cleanButton.addEventListener('click', () => {
@@ -31,13 +32,12 @@ export function createCauldron(onChange: () => void): HTMLElement {
 
   const brewButton = document.createElement('button');
   brewButton.type = 'button';
+  brewButton.disabled = !state.isStarted || state.cauldronIngredients.length === 0;
   brewButton.classList.add('cauldronButton');
   brewButton.textContent = 'Brew';
   brewButton.addEventListener('click', () => {
-    console.log('Brew');
     brewCheck();
-    // state.cauldronIngredients = [];
-    // onChange();
+    onChange();
   });
   // ========
 
