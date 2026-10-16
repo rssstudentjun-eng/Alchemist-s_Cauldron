@@ -1,4 +1,4 @@
-import type { Ingredient } from '../../data/ingredients';
+import type { Ingredient } from '../../../data/ingredients';
 import './shelf-item.scss';
 
 export function shelfItem(

@@ -1,6 +1,6 @@
 import './cauldron.scss';
-import { INGREDIENTS } from '../data/ingredients';
-import { state } from '../state/game-state';
+import { INGREDIENTS } from '../../data/ingredients';
+import { state } from '../../state/game-state';
 
 export function createCauldron(onChange: () => void): HTMLElement {
   const cauldron = document.createElement('div');
