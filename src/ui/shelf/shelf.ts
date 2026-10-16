@@ -1,7 +1,7 @@
-import { shelfItem } from './shelfItem/shelf-item';
+import { shelfItem } from './shelf-Item/shelf-item';
 import './shelf.scss';
-import { actualIngredients, MAX_CAULDRON_ITEMS, state } from '../state/game-state';
-import { addIngredient } from '../logic/add-ingredient';
+import { actualIngredients, MAX_CAULDRON_ITEMS, state } from '../../state/game-state';
+import { addIngredient } from '../../logic/add-ingredient';
 
 export function createShelf(onChange: () => void): HTMLElement {
   const shelfIngredients = document.createElement('div');

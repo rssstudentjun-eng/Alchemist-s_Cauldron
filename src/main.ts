@@ -1,8 +1,9 @@
 import './styles/styles.scss';
-import { createShelf } from './ui/shelf';
-import { createCauldron } from './ui/cauldron';
+import { createShelf } from './ui/shelf/shelf';
+import { createCauldron } from './ui/cauldron/cauldron';
 import { MAX_CAULDRON_ITEMS, startNewGame, state } from './state/game-state';
 import { recipes } from './data/recipes';
+import { createBars } from './ui/bars/bars';
 
 const app = document.querySelector<HTMLDivElement>('#app');
 
@@ -36,6 +37,7 @@ function renderGame(): void {
     recipePanel,
     createShelf(renderGame),
     createCauldron(renderGame),
+    createBars(),
   );
 }
 
