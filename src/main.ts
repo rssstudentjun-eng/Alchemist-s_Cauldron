@@ -1,9 +1,9 @@
 import './styles/styles.scss';
 import { createShelf } from './ui/shelf/shelf';
 import { createCauldron } from './ui/cauldron/cauldron';
-import { MAX_CAULDRON_ITEMS, startNewGame, state } from './state/game-state';
-import { recipes } from './data/recipes';
+import { startNewGame } from './state/game-state';
 import { createBars, updateBars } from './ui/bars/bars';
+import { createRecipePanel } from './ui/recipe-panel/recipe-panel';
 
 const app = document.querySelector<HTMLDivElement>('#app');
 const gameContent = document.createElement('div');
@@ -24,22 +24,12 @@ function renderGame(): void {
     renderGame();
   });
 
-  const recipePanel = document.createElement('section');
-  recipePanel.classList.add('recipePanel');
-  const recipeTitle = document.createElement('h2');
-  recipeTitle.textContent = recipes[0]?.name ?? 'Recipe';
-  const counter = document.createElement('p');
-  counter.classList.add('ingredientCounter');
-  counter.setAttribute('aria-live', 'polite');
-  counter.textContent = `Added: ${state.cauldronIngredients.length} / ${MAX_CAULDRON_ITEMS}`;
-  recipePanel.append(recipeTitle, counter);
-
   gameContent.replaceChildren(
     title,
     newGameButton,
-    recipePanel,
     createShelf(renderGame),
     createCauldron(renderGame),
+    createRecipePanel(),
   );
   updateBars();
 }

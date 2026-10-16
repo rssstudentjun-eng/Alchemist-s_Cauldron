@@ -1,11 +1,11 @@
-type Difficulty = 'easy' | 'medium' | 'hard';
+export type Difficulty = 'easy' | 'medium' | 'hard';
 
-interface IRecipeRange {
+export interface IRecipeRange {
   min: number;
   max: number;
 }
 
-interface IRecipe {
+export interface IRecipe {
   id: string;
   name: string;
   difficulty?: Difficulty;
@@ -13,6 +13,7 @@ interface IRecipe {
   density: IRecipeRange;
   magicPower: IRecipeRange;
 }
+
 export const recipes: IRecipe[] = [
   {
     id: 'moon-mist',
@@ -77,7 +78,7 @@ export const recipes: IRecipe[] = [
   //   difficulty: 'medium',
   //   temperature: { min: 0, max: 10 },
   //   density: { min: 0, max: 10 },
-  //   magicPower: { min: 45, max: 5 },
+  //   magicPower: { min: 5, max: 45 },
   // },
   // {
   //   id: 'heavy-acid',
