@@ -1,6 +1,7 @@
 import './cauldron.scss';
 import { INGREDIENTS } from '../../data/ingredients';
 import { state } from '../../state/game-state';
+import { brewCheck } from '../../logic/brew-check';
 
 export function createCauldron(onChange: () => void): HTMLElement {
   const cauldron = document.createElement('div');
@@ -18,16 +19,28 @@ export function createCauldron(onChange: () => void): HTMLElement {
     li.textContent = INGREDIENTS.find((ingredient) => ingredient.id === id)?.name ?? id;
     cauldronList.appendChild(li);
   });
-
+  // ========
   const cleanButton = document.createElement('button');
   cleanButton.type = 'button';
-  cleanButton.classList.add('cleanButton');
+  cleanButton.disabled = !state.isStarted || state.cauldronIngredients.length === 0;
+  cleanButton.classList.add('cauldronButton');
   cleanButton.textContent = 'Clean Cauldron';
   cleanButton.addEventListener('click', () => {
     state.cauldronIngredients = [];
     onChange();
   });
 
-  cauldron.append(cauldronTitle, cleanButton, cauldronList);
+  const brewButton = document.createElement('button');
+  brewButton.type = 'button';
+  brewButton.disabled = !state.isStarted || state.cauldronIngredients.length === 0;
+  brewButton.classList.add('cauldronButton');
+  brewButton.textContent = 'Brew';
+  brewButton.addEventListener('click', () => {
+    brewCheck();
+    onChange();
+  });
+  // ========
+
+  cauldron.append(cauldronTitle, cleanButton, brewButton, cauldronList);
   return cauldron;
 }

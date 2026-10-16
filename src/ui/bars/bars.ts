@@ -1,6 +1,6 @@
 import './bars.scss';
-import { INGREDIENTS } from '../../data/ingredients';
-import { recipes } from '../../data/recipes';
+import { calculateCauldron } from '../../logic/calculate-cauldron';
+
 import { state } from '../../state/game-state';
 import { createBarItem } from './bar-item/bar-item';
 
@@ -13,20 +13,8 @@ export interface BarItemValue {
 }
 
 function getBarValues(): BarItemValue[] {
-  let temperature = 0;
-  let density = 0;
-  let magicPower = 0;
-
-  state.cauldronIngredients.forEach((id) => {
-    const ingredient = INGREDIENTS.find((item) => item.id === id);
-    if (!ingredient) return;
-
-    temperature += ingredient.temperature;
-    density += ingredient.density;
-    magicPower += ingredient.magicPower;
-  });
-
-  const recipe = recipes[0];
+  const { temperature, density, magicPower } = calculateCauldron(state.cauldronIngredients);
+  const recipe = state.recipe;
   if (!recipe) return [];
 
   return [
