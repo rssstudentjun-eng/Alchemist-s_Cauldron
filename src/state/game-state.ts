@@ -1,5 +1,5 @@
 import { INGREDIENTS } from '../data/ingredients';
-import { LEVEL_ONE } from '../data/difficulty';
+import { DIFFICULTY_SETTINGS, LEVEL_ONE } from '../data/difficulty';
 import { createStock } from '../logic/stock';
 import { type Difficulty, type IRecipe, recipes } from '../data/recipes';
 import { getRecipe } from '../logic/recipe-generator';
@@ -28,12 +28,12 @@ export const state: GameState = {
   cauldronIngredients: [],
   shelfStock: {},
   recipe: null,
-  difficulty: 'easy',
+  difficulty: 'medium',
   isStarted: false,
   isPaused: false,
   score: 0,
-  lives: LEVEL_ONE.initialLives,
-  timeLeft: LEVEL_ONE.initialTime,
+  lives: 0,
+  timeLeft: 0,
   endTime: 0,
   gameOverReason: '',
   gameOverDate: 0,
@@ -42,15 +42,16 @@ export const state: GameState = {
 };
 
 export function startNewGame(): void {
+  const settings = DIFFICULTY_SETTINGS[state.difficulty];
+  if (!settings) return;
   state.cauldronIngredients = [];
   state.shelfStock = createStock(actualIngredients);
-  state.difficulty = 'easy';
   state.recipe = getRecipe(recipes, state.difficulty);
   state.isStarted = true;
   state.isPaused = false;
   state.score = 0;
-  state.lives = LEVEL_ONE.initialLives;
-  state.timeLeft = LEVEL_ONE.initialTime;
+  state.lives = settings.initialLives;
+  state.timeLeft = settings.initialTime;
   state.endTime = Date.now() + state.timeLeft * 1000;
   state.gameOverReason = '';
   state.gameOverDate = 0;

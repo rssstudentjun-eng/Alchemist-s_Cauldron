@@ -20,7 +20,7 @@ export function loadGame(): boolean {
   try {
     const saved: unknown = JSON.parse(localStorage.getItem(SAVE_KEY) ?? 'null');
     if (!saved || typeof saved !== 'object') return false;
-    if (!('difficulty' in saved) || saved.difficulty !== 'easy') return false;
+    if (!('difficulty' in saved) || saved.difficulty !== 'medium') return false;
     if (!('isStarted' in saved) || saved.isStarted !== true) return false;
     if (
       !('recipe' in saved) ||
@@ -30,7 +30,7 @@ export function loadGame(): boolean {
     )
       return false;
     const recipeId = saved.recipe.id;
-    const recipe = recipes.find((item) => item.id === recipeId && item.difficulty === 'easy');
+    const recipe = recipes.find((item) => item.id === recipeId && item.difficulty === 'medium');
     if (!recipe) return false;
     if (!('cauldronIngredients' in saved) || !Array.isArray(saved.cauldronIngredients))
       return false;
@@ -81,7 +81,7 @@ export function loadGame(): boolean {
     state.cauldronIngredients = cauldron;
     state.shelfStock = stock;
     state.recipe = recipe;
-    state.difficulty = 'easy';
+    state.difficulty = 'medium';
     state.score = saved.score;
     state.lives = saved.lives;
     state.timeLeft = saved.timeLeft;
