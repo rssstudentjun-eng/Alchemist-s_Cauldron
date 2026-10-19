@@ -73,8 +73,8 @@ export function loadGame(): boolean {
     if (
       !('timeLeft' in saved) ||
       typeof saved.timeLeft !== 'number' ||
-      !Number.isInteger(saved.timeLeft) ||
-      saved.timeLeft < 1 ||
+      !Number.isFinite(saved.timeLeft) ||
+      saved.timeLeft <= 0 ||
       saved.timeLeft > LEVEL_ONE.maximumTime
     )
       return false;
@@ -88,6 +88,7 @@ export function loadGame(): boolean {
     state.endTime = Date.now() + state.timeLeft * 1000;
     state.gameOverReason = '';
     state.isStarted = true;
+    state.isPaused = false;
     state.message = 'Saved game restored.';
     return true;
   } catch {

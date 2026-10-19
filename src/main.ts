@@ -9,10 +9,13 @@ import { LEVEL_ONE } from './data/difficulty';
 import { checkGameOver } from './logic/end-game';
 import { createGameOver } from './ui/game-over/game-over';
 import { loadGame, saveGame } from './storage/save';
+import { pauseGame, resumeGame, exitToMenu } from './logic/pause-game';
+import { createPauseDialog } from './ui/dialogs/pause-dialog';
 
 const app = document.querySelector<HTMLDivElement>('#app');
 const gameContent = document.createElement('div');
 const barsContainer = document.createElement('div');
+const dialogContainer = document.createElement('div');
 const gameStats = document.createElement('p');
 gameStats.classList.add('gameStats');
 const timerBlock = document.createElement('div');
@@ -24,7 +27,46 @@ const timerFill = document.createElement('div');
 timerFill.classList.add('timerFill');
 timerTrack.append(timerFill);
 timerBlock.append(timerLabel, timerTrack);
-app?.append(gameContent, barsContainer);
+app?.append(gameContent, barsContainer, dialogContainer);
+
+function openPause(): void {
+  if (!state.isStarted || state.isPaused) return;
+  pauseGame();
+  if (!state.isStarted) {
+    renderGame();
+    return;
+  }
+
+  gameContent.classList.add('isPaused');
+  barsContainer.classList.add('isPaused');
+  saveGame();
+
+  const dialog = createPauseDialog(
+    () => {
+      if (document.hidden) return;
+      closePause();
+      resumeGame();
+      renderGame();
+      startTimer(handleTick);
+    },
+    () => {
+      closePause();
+      exitToMenu();
+      saveGame();
+      renderGame();
+    },
+  );
+
+  function closePause(): void {
+    dialog.close();
+    dialogContainer.replaceChildren();
+    gameContent.classList.remove('isPaused');
+    barsContainer.classList.remove('isPaused');
+  }
+
+  dialogContainer.replaceChildren(dialog);
+  dialog.showModal();
+}
 
 function updateStats(): void {
   gameStats.textContent = `Score: ${state.score} | Lives: ${state.lives}`;
@@ -34,6 +76,7 @@ function updateStats(): void {
 }
 
 function beginGame(): void {
+  if (state.isPaused) return;
   startNewGame();
   barsContainer.replaceChildren(createBars());
   renderGame();
@@ -84,10 +127,16 @@ function renderGame(): void {
   message.classList.add('gameMessage');
   message.setAttribute('role', 'status');
   message.textContent = state.message;
+  const pauseButton = document.createElement('button');
+  pauseButton.type = 'button';
+  pauseButton.classList.add('pauseButton');
+  pauseButton.textContent = 'Pause';
+  pauseButton.addEventListener('click', openPause);
   updateStats();
   gameContent.replaceChildren(
     title,
     newGameButton,
+    pauseButton,
     gameStats,
     timerBlock,
     message,
@@ -106,8 +155,9 @@ if (loadGame()) {
 renderGame();
 
 document.addEventListener('visibilitychange', () => {
-  if (!document.hidden && state.isStarted) {
-    updateTime();
-    handleTick();
+  if (document.hidden && state.isStarted && !state.isPaused) {
+    openPause();
   }
 });
+
+if (document.hidden && state.isStarted) openPause();

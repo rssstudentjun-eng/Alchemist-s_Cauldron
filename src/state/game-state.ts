@@ -13,6 +13,7 @@ export interface GameState {
   recipe: IRecipe | null;
   difficulty: Difficulty;
   isStarted: boolean;
+  isPaused: boolean;
   score: number;
   lives: number;
   timeLeft: number;
@@ -27,6 +28,7 @@ export const state: GameState = {
   recipe: null,
   difficulty: 'easy',
   isStarted: false,
+  isPaused: false,
   score: 0,
   lives: LEVEL_ONE.initialLives,
   timeLeft: LEVEL_ONE.initialTime,
@@ -41,6 +43,7 @@ export function startNewGame(): void {
   state.difficulty = 'easy';
   state.recipe = getRecipe(recipes, state.difficulty);
   state.isStarted = true;
+  state.isPaused = false;
   state.score = 0;
   state.lives = LEVEL_ONE.initialLives;
   state.timeLeft = LEVEL_ONE.initialTime;
