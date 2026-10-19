@@ -4,6 +4,8 @@ export function endGame(reason: string): void {
   if (!state.isStarted) return;
   state.isStarted = false;
   state.gameOverReason = reason;
+  state.gameOverDate = Date.now();
+  state.resultSaved = false;
 }
 
 export function checkGameOver(): void {

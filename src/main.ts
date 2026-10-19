@@ -11,6 +11,7 @@ import { createGameOver } from './ui/game-over/game-over';
 import { loadGame, saveGame } from './storage/save';
 import { pauseGame, resumeGame, exitToMenu } from './logic/pause-game';
 import { createPauseDialog } from './ui/dialogs/pause-dialog';
+import { createLeaderboardButton } from './ui/leaderboard/leaderboard';
 
 const app = document.querySelector<HTMLDivElement>('#app');
 const gameContent = document.createElement('div');
@@ -116,7 +117,7 @@ function renderGame(): void {
     message.textContent = state.message
       ? `${state.message} Final score: ${state.score}`
       : 'Brew your first potion!';
-    startScreen.append(title, message, newGameButton);
+    startScreen.append(title, message, newGameButton, createLeaderboardButton());
     gameContent.replaceChildren(startScreen);
     barsContainer.replaceChildren();
     saveGame();
