@@ -26,6 +26,7 @@ export function createCauldron(onChange: () => void): HTMLElement {
   cleanButton.classList.add('cauldronButton');
   cleanButton.textContent = 'Clean Cauldron';
   cleanButton.addEventListener('click', () => {
+    if (!state.isStarted || state.isPaused) return;
     state.cauldronIngredients = [];
     onChange();
   });

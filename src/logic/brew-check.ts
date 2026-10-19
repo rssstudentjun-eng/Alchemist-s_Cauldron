@@ -11,6 +11,7 @@ function isInRange(value: number, range: IRecipeRange): boolean {
 }
 
 export function brewCheck(): boolean | null {
+  if (state.isPaused) return null;
   updateTime();
   if (!state.isStarted || !state.recipe || state.cauldronIngredients.length === 0) return null;
 
