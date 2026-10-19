@@ -1,0 +1,68 @@
+.barItem {
+  padding: 16px;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
+.barTitle {
+  font-weight: 700;
+}
+
+.barValue {
+  margin-block: 8px 16px;
+}
+
+.barLine {
+  position: relative;
+  height: 20px;
+  border-radius: 10px;
+  background-color: antiquewhite;
+  transition: box-shadow 0.5s ease;
+}
+
+.barZero {
+  position: absolute;
+  left: 50%;
+  width: 2px;
+  height: 100%;
+  background-color: black;
+  transform: translateX(-50%);
+}
+
+.barTarget {
+  position: absolute;
+  height: 100%;
+  background-color: #28b551;
+  transition:
+    left 0.5s ease,
+    width 0.5s ease;
+}
+
+.barMarker {
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  width: 4px;
+  height: 28px;
+  background-color: #c55c1a;
+  transform: translateX(-50%);
+  transition: left 0.5s ease;
+}
+
+.barLabels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.barItem.isInRange .barLine {
+  box-shadow: 0 0 12px #238c43;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .barLine,
+  .barTarget,
+  .barMarker {
+    transition: none;
+  }
+}
