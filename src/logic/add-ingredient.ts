@@ -1,6 +1,8 @@
 import { actualIngredients, MAX_CAULDRON_ITEMS, state } from '../state/game-state';
+import { updateTime } from './timer';
 
 export function addIngredient(id: string): boolean {
+  updateTime();
   const quantity = state.shelfStock[id] ?? 0;
 
   if (

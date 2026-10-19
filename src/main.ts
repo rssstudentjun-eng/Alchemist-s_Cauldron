@@ -4,7 +4,10 @@ import { createCauldron } from './ui/cauldron/cauldron';
 import { startNewGame, state } from './state/game-state';
 import { createBars, updateBars } from './ui/bars/bars';
 import { createRecipePanel } from './ui/recipe-panel/recipe-panel';
-import { startTimer, stopTimer } from './logic/timer';
+import { startTimer, stopTimer, updateTime, formatTime } from './logic/timer';
+import { LEVEL_ONE } from './data/difficulty';
+import { checkGameOver } from './logic/end-game';
+import { createGameOver } from './ui/game-over/game-over';
 import { loadGame, saveGame } from './storage/save';
 
 const app = document.querySelector<HTMLDivElement>('#app');
@@ -12,10 +15,22 @@ const gameContent = document.createElement('div');
 const barsContainer = document.createElement('div');
 const gameStats = document.createElement('p');
 gameStats.classList.add('gameStats');
+const timerBlock = document.createElement('div');
+timerBlock.classList.add('timerBlock');
+const timerLabel = document.createElement('p');
+const timerTrack = document.createElement('div');
+timerTrack.classList.add('timerTrack');
+const timerFill = document.createElement('div');
+timerFill.classList.add('timerFill');
+timerTrack.append(timerFill);
+timerBlock.append(timerLabel, timerTrack);
 app?.append(gameContent, barsContainer);
 
 function updateStats(): void {
-  gameStats.textContent = `Score: ${state.score} | Lives: ${state.lives} | Time: ${state.timeLeft}s`;
+  gameStats.textContent = `Score: ${state.score} | Lives: ${state.lives}`;
+  timerLabel.textContent = formatTime(state.timeLeft);
+  timerFill.style.width = `${(state.timeLeft / LEVEL_ONE.initialTime) * 100}%`;
+  timerBlock.classList.toggle('isUrgent', state.isStarted && state.timeLeft < 15);
 }
 
 function beginGame(): void {
@@ -33,6 +48,8 @@ function handleTick(): void {
 
 function renderGame(): void {
   if (!app) return;
+  updateTime();
+  checkGameOver();
 
   const title = document.createElement('h1');
   title.textContent = "Alchemist's Cauldron";
@@ -44,6 +61,12 @@ function renderGame(): void {
 
   if (!state.isStarted) {
     stopTimer();
+    if (state.gameOverReason) {
+      gameContent.replaceChildren(createGameOver(beginGame));
+      barsContainer.replaceChildren();
+      saveGame();
+      return;
+    }
     const startScreen = document.createElement('div');
     startScreen.classList.add('startScreen');
     const message = document.createElement('p');
@@ -66,6 +89,7 @@ function renderGame(): void {
     title,
     newGameButton,
     gameStats,
+    timerBlock,
     message,
     createRecipePanel(),
     createShelf(renderGame),
@@ -80,3 +104,10 @@ if (loadGame()) {
   startTimer(handleTick);
 }
 renderGame();
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && state.isStarted) {
+    updateTime();
+    handleTick();
+  }
+});

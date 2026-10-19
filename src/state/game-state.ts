@@ -16,6 +16,8 @@ export interface GameState {
   score: number;
   lives: number;
   timeLeft: number;
+  endTime: number;
+  gameOverReason: string;
   message: string;
 }
 
@@ -28,6 +30,8 @@ export const state: GameState = {
   score: 0,
   lives: LEVEL_ONE.initialLives,
   timeLeft: LEVEL_ONE.initialTime,
+  endTime: 0,
+  gameOverReason: '',
   message: '',
 };
 
@@ -40,5 +44,7 @@ export function startNewGame(): void {
   state.score = 0;
   state.lives = LEVEL_ONE.initialLives;
   state.timeLeft = LEVEL_ONE.initialTime;
+  state.endTime = Date.now() + state.timeLeft * 1000;
+  state.gameOverReason = '';
   state.message = '';
 }

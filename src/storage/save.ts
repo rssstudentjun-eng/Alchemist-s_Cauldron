@@ -85,6 +85,8 @@ export function loadGame(): boolean {
     state.score = saved.score;
     state.lives = saved.lives;
     state.timeLeft = saved.timeLeft;
+    state.endTime = Date.now() + state.timeLeft * 1000;
+    state.gameOverReason = '';
     state.isStarted = true;
     state.message = 'Saved game restored.';
     return true;
