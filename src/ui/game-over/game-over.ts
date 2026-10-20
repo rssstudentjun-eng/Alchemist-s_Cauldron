@@ -2,7 +2,7 @@ import { state } from '../../state/game-state';
 import { isTopScore, readLeaderboard, saveResult } from '../../storage/leaderboard';
 import { createLeaderboardButton } from '../leaderboard/leaderboard';
 
-export function createGameOver(onPlayAgain: () => void): HTMLElement {
+export function createGameOver(onPlayAgain: () => void, onMenu: () => void): HTMLElement {
   const screen = document.createElement('div');
   screen.classList.add('gameOverScreen');
   const title = document.createElement('h1');
@@ -18,7 +18,7 @@ export function createGameOver(onPlayAgain: () => void): HTMLElement {
   button.addEventListener('click', onPlayAgain);
   screen.append(title, reason, score);
 
-  const { entries, error } = readLeaderboard();
+  const { entries, error } = readLeaderboard(state.difficulty);
   const feedback = document.createElement('p');
   feedback.setAttribute('role', 'status');
   feedback.textContent = error;
@@ -42,7 +42,7 @@ export function createGameOver(onPlayAgain: () => void): HTMLElement {
     form.addEventListener('submit', (event) => {
       event.preventDefault();
       if (state.resultSaved) return;
-      const saveError = saveResult(input.value, state.score, state.gameOverDate);
+      const saveError = saveResult(input.value, state.score, state.gameOverDate, state.difficulty);
       feedback.textContent = saveError || 'Result saved!';
       input.setAttribute('aria-invalid', String(!!saveError));
       if (!saveError) {
@@ -55,6 +55,11 @@ export function createGameOver(onPlayAgain: () => void): HTMLElement {
     screen.append(form);
   }
 
-  screen.append(feedback, button, createLeaderboardButton());
+  const menu = document.createElement('button');
+  menu.type = 'button';
+  menu.classList.add('newGameButton');
+  menu.textContent = 'Back to Menu';
+  menu.addEventListener('click', onMenu);
+  screen.append(feedback, button, menu, createLeaderboardButton());
   return screen;
 }

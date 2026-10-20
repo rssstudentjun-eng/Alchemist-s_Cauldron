@@ -1,5 +1,5 @@
-import { state } from '../state/game-state';
-import { LEVEL_ONE } from '../data/difficulty';
+import { getSettings, state } from '../state/game-state';
+
 import { endGame } from './end-game';
 
 let timer: ReturnType<typeof setInterval> | undefined;
@@ -19,8 +19,8 @@ export function addTimeBonus(): void {
   const now = Date.now();
   if (!state.isStarted || state.isPaused) return;
   state.endTime = Math.min(
-    state.endTime + LEVEL_ONE.timeReward * 1000,
-    now + LEVEL_ONE.initialTime * 1000,
+    state.endTime + getSettings().timeReward * 1000,
+    now + getSettings().maximumTime * 1000,
   );
   updateTime();
 }

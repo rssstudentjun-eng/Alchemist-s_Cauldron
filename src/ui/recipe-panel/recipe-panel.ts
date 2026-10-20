@@ -1,5 +1,5 @@
 import './recipe-panel.scss';
-import { MAX_CAULDRON_ITEMS, state } from '../../state/game-state';
+import { getSettings, state } from '../../state/game-state';
 
 export function createRecipePanel(): HTMLElement {
   const recipe = state.recipe;
@@ -14,10 +14,10 @@ export function createRecipePanel(): HTMLElement {
   const counter = document.createElement('p');
   counter.classList.add('ingredientCounter');
   counter.setAttribute('aria-live', 'polite');
-  counter.textContent = `Added: ${state.cauldronIngredients.length} / ${MAX_CAULDRON_ITEMS}`;
-  counter.classList.toggle('isFull', state.cauldronIngredients.length >= MAX_CAULDRON_ITEMS);
-  if (state.cauldronIngredients.length >= MAX_CAULDRON_ITEMS) {
-    counter.textContent += ' — Cauldron full';
+  counter.textContent = `Added: ${state.cauldronIngredients.length} / ${getSettings().capacity}`;
+  counter.classList.toggle('isFull', state.cauldronIngredients.length >= getSettings().capacity);
+  if (state.cauldronIngredients.length >= getSettings().capacity) {
+    counter.textContent += '- Cauldron full';
   }
 
   if (!recipe) {
