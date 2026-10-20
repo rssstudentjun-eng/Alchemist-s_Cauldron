@@ -187,7 +187,7 @@ svg {
   th,
   td {
     padding: 8px;
-    border: 1px solid #aaa;
+    border: 1px solid gray;
     text-align: left;
     overflow-wrap: anywhere;
   }
@@ -215,5 +215,76 @@ svg {
     padding: 10px;
     border: 1px solid black;
     border-radius: 6px;
+  }
+}
+
+.startControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  button {
+    padding: 12px 20px;
+    border: 1px solid black;
+    border-radius: 10px;
+  }
+}
+
+.startField {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: min(900px, 100%);
+  min-height: 300px;
+
+  .shelf,
+  .cauldron {
+    min-height: 300px;
+    min-width: 0;
+    padding: 20px;
+    font-size: 18px;
+  }
+}
+
+.startGameButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+}
+
+.helpDialog,
+.settingsDialog {
+  margin: auto;
+  padding: 24px;
+  max-width: min(600px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  border: 1px solid black;
+  border-radius: 10px;
+
+  li {
+    margin-block: 12px;
+  }
+
+  button {
+    display: block;
+    margin-top: 12px;
+    padding: 10px 16px;
+    border: 1px solid black;
+    border-radius: 6px;
+  }
+
+  button[aria-pressed='true'] {
+    background-color: lightgray;
+  }
+
+  button:disabled {
+    opacity: 0.5;
+  }
+
+  &::backdrop {
+    background-color: rgb(0 0 0 / 60%);
   }
 }

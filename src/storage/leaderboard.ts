@@ -1,10 +1,13 @@
+import type { Difficulty } from '../data/recipes';
 export interface LeaderboardEntry {
   name: string;
   score: number;
   date: number;
 }
 
-const LEADERBOARD_KEY = 'alchemist-level-one-top10';
+function leaderboardKey(difficulty: Difficulty): string {
+  return difficulty === 'medium' ? 'alchemist-level-one-top10' : `alchemist-top10-${difficulty}`;
+}
 
 export function isValidPlayerName(name: string): boolean {
   return /^[\p{L}\p{N} _-]{2,15}$/u.test(name) && name.trim().length > 0;
@@ -16,9 +19,12 @@ function sortEntries(entries: LeaderboardEntry[]): LeaderboardEntry[] {
     .slice(0, 10);
 }
 
-export function readLeaderboard(): { entries: LeaderboardEntry[]; error: string } {
+export function readLeaderboard(difficulty: Difficulty): {
+  entries: LeaderboardEntry[];
+  error: string;
+} {
   try {
-    const data: unknown = JSON.parse(localStorage.getItem(LEADERBOARD_KEY) ?? '[]');
+    const data: unknown = JSON.parse(localStorage.getItem(leaderboardKey(difficulty)) ?? '[]');
     if (!Array.isArray(data)) throw new Error('Invalid leaderboard');
     const entries: LeaderboardEntry[] = [];
     for (const entry of data) {
@@ -46,15 +52,20 @@ export function isTopScore(entries: LeaderboardEntry[], score: number, date: num
   return !!last && (score > last.score || (score === last.score && date < last.date));
 }
 
-export function saveResult(name: string, score: number, date: number): string {
+export function saveResult(
+  name: string,
+  score: number,
+  date: number,
+  difficulty: Difficulty,
+): string {
   if (!isValidPlayerName(name)) return 'Use letters, digits, spaces, _ or -.';
   if (!Number.isInteger(score) || score < 0 || !Number.isFinite(date)) return 'Invalid result.';
-  const { entries, error } = readLeaderboard();
+  const { entries, error } = readLeaderboard(difficulty);
   if (error) return error;
   if (!isTopScore(entries, score, date)) return 'This result is no longer in the Top-10.';
   try {
     localStorage.setItem(
-      LEADERBOARD_KEY,
+      leaderboardKey(difficulty),
       JSON.stringify(sortEntries([...entries, { name, score, date }])),
     );
     return '';
@@ -63,9 +74,9 @@ export function saveResult(name: string, score: number, date: number): string {
   }
 }
 
-export function clearLeaderboard(): string {
+export function clearLeaderboard(difficulty: Difficulty): string {
   try {
-    localStorage.removeItem(LEADERBOARD_KEY);
+    localStorage.removeItem(leaderboardKey(difficulty));
     return '';
   } catch {
     return 'Leaderboard could not be cleared.';

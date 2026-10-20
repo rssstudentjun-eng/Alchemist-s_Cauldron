@@ -1,17 +1,17 @@
 import './styles/styles.scss';
 import { createShelf } from './ui/shelf/shelf';
 import { createCauldron } from './ui/cauldron/cauldron';
-import { startNewGame, state } from './state/game-state';
+import { getSettings, startNewGame, state } from './state/game-state';
 import { createBars, updateBars } from './ui/bars/bars';
 import { createRecipePanel } from './ui/recipe-panel/recipe-panel';
 import { startTimer, stopTimer, updateTime, formatTime } from './logic/timer';
-import { LEVEL_ONE } from './data/difficulty';
+
 import { checkGameOver } from './logic/end-game';
 import { createGameOver } from './ui/game-over/game-over';
 import { loadGame, saveGame } from './storage/save';
 import { pauseGame, resumeGame, exitToMenu } from './logic/pause-game';
 import { createPauseDialog } from './ui/dialogs/pause-dialog';
-import { createLeaderboardButton } from './ui/leaderboard/leaderboard';
+import { createStartScreen } from './ui/start-screen/start-screen';
 
 const app = document.querySelector<HTMLDivElement>('#app');
 const gameContent = document.createElement('div');
@@ -31,7 +31,7 @@ timerBlock.append(timerLabel, timerTrack);
 app?.append(gameContent, barsContainer, dialogContainer);
 
 function openPause(): void {
-  if (!state.isStarted || state.isPaused) return;
+  if (!state.isStarted || dialogContainer.childElementCount > 0) return;
   pauseGame();
   if (!state.isStarted) {
     renderGame();
@@ -72,7 +72,7 @@ function openPause(): void {
 function updateStats(): void {
   gameStats.textContent = `Score: ${state.score} | Lives: ${state.lives}`;
   timerLabel.textContent = formatTime(state.timeLeft);
-  timerFill.style.width = `${(state.timeLeft / LEVEL_ONE.initialTime) * 100}%`;
+  timerFill.style.width = `${(state.timeLeft / getSettings().initialTime) * 100}%`;
   timerBlock.classList.toggle('isUrgent', state.isStarted && state.timeLeft < 15);
 }
 
@@ -88,6 +88,31 @@ function handleTick(): void {
   updateStats();
   saveGame();
   if (!state.isStarted) renderGame();
+}
+
+function continueGame(): void {
+  const saved = loadGame();
+  if (!saved) {
+    renderGame();
+    return;
+  }
+  state.difficulty = saved.difficulty;
+  state.score = saved.score;
+  state.timeLeft = saved.timeLeft;
+  state.lives = saved.lives;
+  state.recipe = saved.activeRecipe;
+  state.cauldronIngredients = saved.cauldronIngredients;
+  state.shelfStock = saved.shelfStock;
+  state.isStarted = true;
+  state.isPaused = true;
+  state.endTime = 0;
+  state.gameOverReason = '';
+  state.gameOverDate = 0;
+  state.resultSaved = false;
+  state.message = 'Saved game restored.';
+  barsContainer.replaceChildren(createBars());
+  renderGame();
+  openPause();
 }
 
 function renderGame(): void {
@@ -106,21 +131,18 @@ function renderGame(): void {
   if (!state.isStarted) {
     stopTimer();
     if (state.gameOverReason) {
-      gameContent.replaceChildren(createGameOver(beginGame));
+      gameContent.replaceChildren(
+        createGameOver(beginGame, () => {
+          exitToMenu();
+          renderGame();
+        }),
+      );
       barsContainer.replaceChildren();
       saveGame();
       return;
     }
-    const startScreen = document.createElement('div');
-    startScreen.classList.add('startScreen');
-    const message = document.createElement('p');
-    message.textContent = state.message
-      ? `${state.message} Final score: ${state.score}`
-      : 'Brew your first potion!';
-    startScreen.append(title, message, newGameButton, createLeaderboardButton());
-    gameContent.replaceChildren(startScreen);
+    gameContent.replaceChildren(createStartScreen(beginGame, renderGame, continueGame));
     barsContainer.replaceChildren();
-    saveGame();
     return;
   }
 
@@ -149,10 +171,6 @@ function renderGame(): void {
   saveGame();
 }
 
-if (loadGame()) {
-  barsContainer.append(createBars());
-  startTimer(handleTick);
-}
 renderGame();
 
 document.addEventListener('visibilitychange', () => {
@@ -162,3 +180,13 @@ document.addEventListener('visibilitychange', () => {
 });
 
 if (document.hidden && state.isStarted) openPause();
+
+window.addEventListener('pagehide', () => {
+  if (!state.isStarted) return;
+  pauseGame();
+  saveGame();
+});
+
+window.addEventListener('pageshow', () => {
+  if (state.isStarted && state.isPaused) openPause();
+});

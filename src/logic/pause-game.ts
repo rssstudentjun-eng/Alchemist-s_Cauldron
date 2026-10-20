@@ -1,5 +1,6 @@
 import { state } from '../state/game-state';
 import { stopTimer, updateTime } from './timer';
+import { clearSave } from '../storage/save';
 
 export function pauseGame(): void {
   if (!state.isStarted || state.isPaused) return;
@@ -17,6 +18,7 @@ export function resumeGame(): void {
 
 export function exitToMenu(): void {
   stopTimer();
+  clearSave();
   state.isStarted = false;
   state.isPaused = false;
   state.gameOverReason = '';
@@ -25,4 +27,7 @@ export function exitToMenu(): void {
   state.shelfStock = {};
   state.recipe = null;
   state.endTime = 0;
+  state.score = 0;
+  state.timeLeft = 0;
+  state.lives = 0;
 }
