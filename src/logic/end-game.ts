@@ -1,4 +1,5 @@
 import { state } from '../state/game-state';
+import { clearSave } from '../storage/save';
 
 export function endGame(reason: string): void {
   if (!state.isStarted) return;
@@ -6,6 +7,7 @@ export function endGame(reason: string): void {
   state.gameOverReason = reason;
   state.gameOverDate = Date.now();
   state.resultSaved = false;
+  clearSave();
 }
 
 export function checkGameOver(): void {

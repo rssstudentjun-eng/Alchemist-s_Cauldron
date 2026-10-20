@@ -3,6 +3,7 @@ import { DIFFICULTY_SETTINGS } from '../../data/difficulty';
 import type { Difficulty } from '../../data/recipes';
 import { createLeaderboardButton } from '../leaderboard/leaderboard';
 import { reactions } from '../../data/reactions';
+import { loadGame } from '../../storage/save';
 
 function openHelp(): void {
   const dialog = document.createElement('dialog');
@@ -89,7 +90,11 @@ function openSettings(onChange: () => void): void {
   dialog.showModal();
 }
 
-export function createStartScreen(onStart: () => void, onChange: () => void): HTMLElement {
+export function createStartScreen(
+  onStart: () => void,
+  onChange: () => void,
+  onContinue: () => void,
+): HTMLElement {
   const screen = document.createElement('div');
   screen.classList.add('startScreen');
   const title = document.createElement('h1');
@@ -109,6 +114,13 @@ export function createStartScreen(onStart: () => void, onChange: () => void): HT
   settings.textContent = 'Settings';
   settings.addEventListener('click', () => openSettings(onChange));
   controls.append(help, settings, createLeaderboardButton());
+  if (loadGame()) {
+    const continueButton = document.createElement('button');
+    continueButton.type = 'button';
+    continueButton.textContent = 'Continue Game';
+    continueButton.addEventListener('click', onContinue);
+    controls.append(continueButton);
+  }
   const field = document.createElement('div');
   field.classList.add('startField');
   const shelf = document.createElement('section');
