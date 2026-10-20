@@ -31,7 +31,7 @@ timerBlock.append(timerLabel, timerTrack);
 app?.append(gameContent, barsContainer, dialogContainer);
 
 function openPause(): void {
-  if (!state.isStarted || state.isPaused) return;
+  if (!state.isStarted || dialogContainer.childElementCount > 0) return;
   pauseGame();
   if (!state.isStarted) {
     renderGame();
@@ -90,6 +90,31 @@ function handleTick(): void {
   if (!state.isStarted) renderGame();
 }
 
+function continueGame(): void {
+  const saved = loadGame();
+  if (!saved) {
+    renderGame();
+    return;
+  }
+  state.difficulty = saved.difficulty;
+  state.score = saved.score;
+  state.timeLeft = saved.timeLeft;
+  state.lives = saved.lives;
+  state.recipe = saved.activeRecipe;
+  state.cauldronIngredients = saved.cauldronIngredients;
+  state.shelfStock = saved.shelfStock;
+  state.isStarted = true;
+  state.isPaused = true;
+  state.endTime = 0;
+  state.gameOverReason = '';
+  state.gameOverDate = 0;
+  state.resultSaved = false;
+  state.message = 'Saved game restored.';
+  barsContainer.replaceChildren(createBars());
+  renderGame();
+  openPause();
+}
+
 function renderGame(): void {
   if (!app) return;
   updateTime();
@@ -116,9 +141,8 @@ function renderGame(): void {
       saveGame();
       return;
     }
-    gameContent.replaceChildren(createStartScreen(beginGame, renderGame));
+    gameContent.replaceChildren(createStartScreen(beginGame, renderGame, continueGame));
     barsContainer.replaceChildren();
-    saveGame();
     return;
   }
 
@@ -147,10 +171,6 @@ function renderGame(): void {
   saveGame();
 }
 
-if (loadGame()) {
-  barsContainer.append(createBars());
-  startTimer(handleTick);
-}
 renderGame();
 
 document.addEventListener('visibilitychange', () => {
@@ -160,3 +180,13 @@ document.addEventListener('visibilitychange', () => {
 });
 
 if (document.hidden && state.isStarted) openPause();
+
+window.addEventListener('pagehide', () => {
+  if (!state.isStarted) return;
+  pauseGame();
+  saveGame();
+});
+
+window.addEventListener('pageshow', () => {
+  if (state.isStarted && state.isPaused) openPause();
+});
