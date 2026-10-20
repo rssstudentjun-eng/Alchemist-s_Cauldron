@@ -1,11 +1,8 @@
 import { INGREDIENTS } from '../data/ingredients';
-import { DIFFICULTY_SETTINGS, LEVEL_ONE } from '../data/difficulty';
+import { DIFFICULTY_SETTINGS, type DifficultySettings } from '../data/difficulty';
 import { createStock } from '../logic/stock';
 import { type Difficulty, type IRecipe, recipes } from '../data/recipes';
 import { getRecipe } from '../logic/recipe-generator';
-
-export const actualIngredients = INGREDIENTS.slice(0, 6);
-export const MAX_CAULDRON_ITEMS = LEVEL_ONE.capacity;
 
 export interface GameState {
   cauldronIngredients: string[];
@@ -45,7 +42,7 @@ export function startNewGame(): void {
   const settings = DIFFICULTY_SETTINGS[state.difficulty];
   if (!settings) return;
   state.cauldronIngredients = [];
-  state.shelfStock = createStock(actualIngredients);
+  state.shelfStock = createStock(getActualIngredients());
   state.recipe = getRecipe(recipes, state.difficulty);
   state.isStarted = true;
   state.isPaused = false;
@@ -57,4 +54,20 @@ export function startNewGame(): void {
   state.gameOverDate = 0;
   state.resultSaved = false;
   state.message = '';
+}
+
+export function getSettings(): DifficultySettings {
+  const settings = DIFFICULTY_SETTINGS[state.difficulty];
+  if (!settings) throw new Error('Difficulty settings are missing');
+  return settings;
+}
+
+export function getActualIngredients() {
+  return INGREDIENTS.slice(0, getSettings().shelfSize);
+}
+
+export function selectDifficulty(difficulty: Difficulty): boolean {
+  if (state.isStarted || !DIFFICULTY_SETTINGS[difficulty]) return false;
+  state.difficulty = difficulty;
+  return true;
 }

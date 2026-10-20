@@ -78,7 +78,7 @@ export const recipes: IRecipe[] = [
     difficulty: 'medium',
     temperature: { min: 0, max: 10 },
     density: { min: 0, max: 10 },
-    magicPower: { min: 5, max: 45 },
+    magicPower: { min: 45, max: 55 },
   },
   {
     id: 'heavy-acid',

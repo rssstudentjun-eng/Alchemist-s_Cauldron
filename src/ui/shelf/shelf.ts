@@ -1,6 +1,6 @@
 import { shelfItem } from './shelf-Item/shelf-item';
 import './shelf.scss';
-import { actualIngredients, MAX_CAULDRON_ITEMS, state } from '../../state/game-state';
+import { getActualIngredients, getSettings, state } from '../../state/game-state';
 import { addIngredient } from '../../logic/add-ingredient';
 
 export function createShelf(onChange: () => void): HTMLElement {
@@ -11,8 +11,8 @@ export function createShelf(onChange: () => void): HTMLElement {
   shelfTitle.classList.add('shelfTitle');
   shelfTitle.textContent = 'Shelf';
 
-  const isCauldronFull = state.cauldronIngredients.length >= MAX_CAULDRON_ITEMS;
-  const shelfItems = actualIngredients.map((ingredient) => {
+  const isCauldronFull = state.cauldronIngredients.length >= getSettings().capacity;
+  const shelfItems = getActualIngredients().map((ingredient) => {
     const quantity = state.shelfStock[ingredient.id] ?? 0;
     const item = shelfItem(ingredient, quantity, isCauldronFull);
     const button = item.querySelector<HTMLButtonElement>('.shelfItemButton');

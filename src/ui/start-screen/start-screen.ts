@@ -1,7 +1,8 @@
-import { state } from '../../state/game-state';
+import { selectDifficulty, state } from '../../state/game-state';
 import { DIFFICULTY_SETTINGS } from '../../data/difficulty';
 import type { Difficulty } from '../../data/recipes';
 import { createLeaderboardButton } from '../leaderboard/leaderboard';
+import { reactions } from '../../data/reactions';
 
 function openHelp(): void {
   const dialog = document.createElement('dialog');
@@ -10,14 +11,13 @@ function openHelp(): void {
   const title = document.createElement('h2');
   title.textContent = 'How to play';
   const settings = DIFFICULTY_SETTINGS[state.difficulty];
-  if (!settings) return;
   const rules = document.createElement('ul');
   [
     `Start with ${settings.initialTime} seconds and ${settings.initialLives} lives.`,
     `Add up to ${settings.capacity} ingredients to the cauldron. Each ingredient has 2-15 uses.`,
     'Used ingredients are not returned when you clear or brew the cauldron.',
     `Match all three recipe ranges. Brewing allows a tolerance of +/-${settings.tolerance}.`,
-    `A successful brew gives ${settings.scoreReward} points and ${settings.timeReward} seconds, up to ${settings.initialTime}.`,
+    `A successful brew gives ${settings.scoreReward} points and ${settings.timeReward} seconds, up to ${settings.maximumTime}.`,
     'A failed brew costs one life. Both results empty the cauldron.',
     'The game ends when time or lives run out, or when both the shelf and cauldron are empty.',
     'Pause freezes the game. Switching tabs pauses automatically.',
@@ -26,6 +26,26 @@ function openHelp(): void {
     rule.textContent = text;
     rules.append(rule);
   });
+  reactions.slice(0, settings.reactionCount).forEach((reaction) => {
+    const rule = document.createElement('li');
+    if (reaction.id === 'bubbling') {
+      rule.textContent =
+        'Bubbling: Fairy Dust + Caustic Acid increases Magic Power by 50% and costs 10 seconds.';
+    } else if (reaction.id === 'solar-frost') {
+      rule.textContent =
+        'Solar Frost: Dragon Tears + Frost Lotus sets Temperature to 0 and increases Density by 20%.';
+    } else {
+      rule.textContent =
+        'Volatile Mix: Phoenix Feather + Essence of the Void costs one life and empties the cauldron.';
+    }
+    rules.append(rule);
+  });
+  const reactionRule = document.createElement('li');
+  reactionRule.textContent =
+    settings.reactionCount === 0
+      ? 'Easy has no reactions.'
+      : 'Reaction penalties apply once when the combination becomes active. Clearing or brewing lets it trigger again.';
+  rules.append(reactionRule);
   const close = document.createElement('button');
   close.type = 'button';
   close.textContent = 'Close';
@@ -49,14 +69,11 @@ function openSettings(onChange: () => void): void {
     const settings = DIFFICULTY_SETTINGS[difficulty];
     const button = document.createElement('button');
     button.type = 'button';
-    button.textContent = settings
-      ? `${settings.title}: ${settings.shelfSize} ingredients, ${settings.capacity} slots`
-      : `${difficulty === 'easy' ? 'Easy' : 'Hard'} (unavailable)`;
-    button.disabled = !settings;
+    button.textContent = `${settings.title}: ${settings.shelfSize} ingredients, ${settings.capacity} slots, ${settings.initialTime}s, ${settings.initialLives} lives, +/-${settings.tolerance}, +${settings.scoreReward} points, +${settings.timeReward}s, ${settings.reactionCount} reactions`;
     button.setAttribute('aria-pressed', String(state.difficulty === difficulty));
     button.addEventListener('click', () => {
-      if (state.isStarted || !settings) return;
-      state.difficulty = difficulty;
+      if (state.isStarted) return;
+      if (!selectDifficulty(difficulty)) return;
       dialog.close();
       onChange();
     });

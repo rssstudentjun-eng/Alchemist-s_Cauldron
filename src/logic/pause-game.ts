@@ -25,4 +25,7 @@ export function exitToMenu(): void {
   state.shelfStock = {};
   state.recipe = null;
   state.endTime = 0;
+  state.score = 0;
+  state.timeLeft = 0;
+  state.lives = 0;
 }

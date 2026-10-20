@@ -1,5 +1,7 @@
-import { actualIngredients, MAX_CAULDRON_ITEMS, state } from '../state/game-state';
+import { getActualIngredients, getSettings, state } from '../state/game-state';
 import { updateTime } from './timer';
+import { getActiveReactions } from '../data/reactions';
+import { checkGameOver } from './end-game';
 
 export function addIngredient(id: string): boolean {
   if (state.isPaused) return false;
@@ -8,14 +10,26 @@ export function addIngredient(id: string): boolean {
 
   if (
     !state.isStarted ||
-    !actualIngredients.some((ingredient) => ingredient.id === id) ||
+    !getActualIngredients().some((ingredient) => ingredient.id === id) ||
     quantity <= 0 ||
-    state.cauldronIngredients.length >= MAX_CAULDRON_ITEMS
+    state.cauldronIngredients.length >= getSettings().capacity
   ) {
     return false;
   }
 
+  const previousReactions = getActiveReactions(state.cauldronIngredients, state.difficulty);
   state.shelfStock[id] = quantity - 1;
   state.cauldronIngredients.push(id);
+  const newReactions = getActiveReactions(state.cauldronIngredients, state.difficulty).filter(
+    (reaction) => !previousReactions.some((previous) => previous.id === reaction.id),
+  );
+  newReactions.forEach((reaction) => {
+    state.endTime -= reaction.timePenalty * 1000;
+    state.lives = Math.max(0, state.lives - reaction.lifePenalty);
+    if (reaction.lifePenalty > 0) state.cauldronIngredients = [];
+  });
+  state.message = newReactions.map((reaction) => reaction.name).join(', ');
+  updateTime();
+  checkGameOver();
   return true;
 }

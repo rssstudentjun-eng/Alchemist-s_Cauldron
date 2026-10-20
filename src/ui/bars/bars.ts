@@ -13,7 +13,10 @@ export interface BarItemValue {
 }
 
 function getBarValues(): BarItemValue[] {
-  const { temperature, density, magicPower } = calculateCauldron(state.cauldronIngredients);
+  const { temperature, density, magicPower } = calculateCauldron(
+    state.cauldronIngredients,
+    state.difficulty,
+  );
   const recipe = state.recipe;
   if (!recipe) return [];
 
