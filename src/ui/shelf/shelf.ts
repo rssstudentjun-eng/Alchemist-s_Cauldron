@@ -12,7 +12,8 @@ export function createShelf(onChange: () => void): HTMLElement {
   shelfTitle.textContent = 'Shelf';
 
   const isCauldronFull = state.cauldronIngredients.length >= getSettings().capacity;
-  const shelfItems = getActualIngredients().map((ingredient) => {
+  const ingredients = state.isStarted ? getActualIngredients() : [];
+  const shelfItems = ingredients.map((ingredient) => {
     const quantity = state.shelfStock[ingredient.id] ?? 0;
     const item = shelfItem(ingredient, quantity, isCauldronFull);
     const button = item.querySelector<HTMLButtonElement>('.shelfItemButton');

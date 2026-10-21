@@ -1,9 +1,12 @@
+import './dialogs.scss';
+
 export function createPauseDialog(onResume: () => void, onExit: () => void): HTMLDialogElement {
   const dialog = document.createElement('dialog');
   dialog.classList.add('pauseDialog');
   dialog.setAttribute('aria-labelledby', 'pauseTitle');
 
   const title = document.createElement('h2');
+  title.classList.add('pauseTitle');
   title.id = 'pauseTitle';
   title.textContent = 'Game paused';
 
