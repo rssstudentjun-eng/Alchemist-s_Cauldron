@@ -1,9 +1,6 @@
 import './styles/styles.scss';
-import { createShelf } from './ui/shelf/shelf';
-import { createCauldron } from './ui/cauldron/cauldron';
 import { getSettings, startNewGame, state } from './state/game-state';
 import { createBars, updateBars } from './ui/bars/bars';
-import { createRecipePanel } from './ui/recipe-panel/recipe-panel';
 import { startTimer, stopTimer, updateTime, formatTime } from './logic/timer';
 
 import { checkGameOver } from './logic/end-game';
@@ -11,7 +8,7 @@ import { createGameOver } from './ui/game-over/game-over';
 import { loadGame, saveGame } from './storage/save';
 import { pauseGame, resumeGame, exitToMenu } from './logic/pause-game';
 import { createPauseDialog } from './ui/dialogs/pause-dialog';
-import { createStartScreen } from './ui/start-screen/start-screen';
+import { createGameScreen } from './ui/start-screen/start-screen';
 
 const app = document.querySelector<HTMLDivElement>('#app');
 const gameContent = document.createElement('div');
@@ -70,8 +67,10 @@ function openPause(): void {
 }
 
 function updateStats(): void {
-  gameStats.textContent = `Score: ${state.score} | Lives: ${state.lives}`;
-  timerLabel.textContent = formatTime(state.timeLeft);
+  gameStats.textContent = state.isStarted
+    ? `Score: ${state.score} | Lives: ${state.lives}`
+    : 'Score: 0';
+  timerLabel.textContent = state.isStarted ? formatTime(state.timeLeft) : '00:00';
   timerFill.style.width = `${(state.timeLeft / getSettings().initialTime) * 100}%`;
   timerBlock.classList.toggle('isUrgent', state.isStarted && state.timeLeft < 15);
 }
@@ -120,14 +119,6 @@ function renderGame(): void {
   updateTime();
   checkGameOver();
 
-  const title = document.createElement('h1');
-  title.textContent = "Alchemist's Cauldron";
-  const newGameButton = document.createElement('button');
-  newGameButton.type = 'button';
-  newGameButton.classList.add('newGameButton');
-  newGameButton.textContent = state.isStarted ? 'New Game' : 'Start Game';
-  newGameButton.addEventListener('click', beginGame);
-
   if (!state.isStarted) {
     stopTimer();
     if (state.gameOverReason) {
@@ -141,34 +132,18 @@ function renderGame(): void {
       saveGame();
       return;
     }
-    gameContent.replaceChildren(createStartScreen(beginGame, renderGame, continueGame));
     barsContainer.replaceChildren();
-    return;
   }
-
-  const message = document.createElement('p');
-  message.classList.add('gameMessage');
-  message.setAttribute('role', 'status');
-  message.textContent = state.message;
-  const pauseButton = document.createElement('button');
-  pauseButton.type = 'button';
-  pauseButton.classList.add('pauseButton');
-  pauseButton.textContent = 'Pause';
-  pauseButton.addEventListener('click', openPause);
   updateStats();
   gameContent.replaceChildren(
-    title,
-    newGameButton,
-    pauseButton,
-    gameStats,
-    timerBlock,
-    message,
-    createRecipePanel(),
-    createShelf(renderGame),
-    createCauldron(renderGame),
+    createGameScreen(
+      { onStart: beginGame, onChange: renderGame, onContinue: continueGame, onPause: openPause },
+      gameStats,
+      timerBlock,
+    ),
   );
   updateBars();
-  saveGame();
+  if (state.isStarted) saveGame();
 }
 
 renderGame();

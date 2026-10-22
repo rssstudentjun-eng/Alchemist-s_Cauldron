@@ -20,6 +20,7 @@ export function shelfItem(
   shelfItemImage.classList.add('shelfItemImage');
   shelfItemImage.src = ingredient.image;
   shelfItemImage.alt = ingredient.name;
+  shelfItemImage.draggable = false;
   shelButton.append(shelfItemImage);
 
   const shelfItemName = document.createElement('p');
