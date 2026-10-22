@@ -1,7 +1,8 @@
 import './cauldron.scss';
 import { INGREDIENTS } from '../../data/ingredients';
-import { state } from '../../state/game-state';
+import { getSettings, state } from '../../state/game-state';
 import { brewCheck } from '../../logic/brew-check';
+import { addIngredient } from '../../logic/add-ingredient';
 
 export function createCauldron(onChange: () => void): HTMLElement {
   const cauldron = document.createElement('div');
@@ -18,6 +19,34 @@ export function createCauldron(onChange: () => void): HTMLElement {
     cauldron.append(cauldronTitle, cauldronList);
     return cauldron;
   }
+
+  cauldron.addEventListener('dragover', (event) => {
+    if (
+      !event.dataTransfer?.types.includes('application/x-alchemist-ingredient') ||
+      !state.isStarted ||
+      state.isPaused ||
+      state.cauldronIngredients.length >= getSettings().capacity
+    ) {
+      cauldron.classList.remove('isDragOver');
+      return;
+    }
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'copy';
+    cauldron.classList.add('isDragOver');
+  });
+
+  cauldron.addEventListener('dragleave', (event) => {
+    if (event.relatedTarget instanceof Node && cauldron.contains(event.relatedTarget)) return;
+    cauldron.classList.remove('isDragOver');
+  });
+
+  cauldron.addEventListener('drop', (event) => {
+    event.preventDefault();
+    cauldron.classList.remove('isDragOver');
+    if (!event.dataTransfer?.types.includes('application/x-alchemist-ingredient')) return;
+    const id = event.dataTransfer.getData('application/x-alchemist-ingredient');
+    if (addIngredient(id)) onChange();
+  });
 
   state.cauldronIngredients.forEach((id) => {
     const li = document.createElement('li');

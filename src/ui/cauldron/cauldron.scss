@@ -10,12 +10,25 @@
   font-size: 16px;
   padding: 10px;
   border-radius: 5px;
-  border: 1px solid black;
-  color: black;
+  border: 1px solid darkgreen;
+  color: darkgreen;
+  margin: 10px 10px 0 0;
 }
 
-.cleanButton {
+.cauldron.isDragOver {
+  outline: 3px dashed darkgreen;
+  outline-offset: -8px;
+  background-color: rgb(0 100 0 / 15%);
 }
 
-.brewButton {
+.cauldronList {
+  color: darkgreen;
+  max-width: 50%;
+}
+
+.cauldronList li {
+  border: 1px solid darkgreen;
+  border-radius: 5px;
+  margin-top: 10px;
+  padding: 5px;
 }
