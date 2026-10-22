@@ -1,5 +1,12 @@
 import type { Ingredient } from '../../../data/ingredients';
+import { state } from '../../../state/game-state';
 import './shelf-item.scss';
+
+function formatValue(value: number): string {
+  if (value > 0) return `+${value}`;
+  if (value < 0) return `\u2212${Math.abs(value)}`;
+  return '0';
+}
 
 export function shelfItem(
   ingredient: Ingredient,
@@ -37,18 +44,56 @@ export function shelfItem(
 
   const temperature = document.createElement('p');
   temperature.classList.add('shelfItemTemperature');
-  temperature.textContent = `Temperature: ${ingredient.temperature}°C`;
+  temperature.textContent = `Temperature: ${formatValue(ingredient.temperature)}°C`;
 
   const density = document.createElement('p');
   density.classList.add('shelfItemDensity');
-  density.textContent = `Density: ${ingredient.density}`;
+  density.textContent = `Density: ${formatValue(ingredient.density)}`;
 
   const magicPower = document.createElement('p');
   magicPower.classList.add('shelfItemMagicPower');
-  magicPower.textContent = `Magic Power: ${ingredient.magicPower}`;
+  magicPower.textContent = `Magic Power: ${formatValue(ingredient.magicPower)}`;
 
-  shelButton.append(temperature, density, magicPower);
+  const tooltip = document.createElement('div');
+  tooltip.classList.add('ingredientTooltip');
+  tooltip.id = `tooltip-${ingredient.id}`;
+  tooltip.setAttribute('role', 'tooltip');
+  tooltip.hidden = true;
+  tooltip.append(temperature, density, magicPower);
+  shelButton.setAttribute('aria-describedby', tooltip.id);
 
-  shelfItem.append(shelButton);
+  function showTooltip(): void {
+    if (!state.isStarted || state.isPaused || quantity === 0) return;
+    tooltip.hidden = false;
+    const card = shelfItem.getBoundingClientRect();
+    const width = tooltip.offsetWidth;
+    const height = tooltip.offsetHeight;
+    const openLeft = card.right + width + 8 > document.documentElement.clientWidth;
+    const openUp = card.top + height > document.documentElement.clientHeight - 8;
+    const left = openLeft ? card.left - width - 8 : card.right + 8;
+    const top = openUp ? card.top - height - 8 : card.top;
+    tooltip.style.left = `${Math.max(8, Math.min(left, document.documentElement.clientWidth - width - 8))}px`;
+    tooltip.style.top = `${Math.max(8, Math.min(top, document.documentElement.clientHeight - height - 8))}px`;
+    window.addEventListener('scroll', hideTooltip, true);
+    window.addEventListener('resize', hideTooltip);
+  }
+
+  function hideTooltip(): void {
+    tooltip.hidden = true;
+    window.removeEventListener('scroll', hideTooltip, true);
+    window.removeEventListener('resize', hideTooltip);
+  }
+
+  shelfItem.addEventListener('mouseenter', showTooltip);
+  shelfItem.addEventListener('mouseleave', hideTooltip);
+  shelButton.addEventListener('focus', showTooltip);
+  shelButton.addEventListener('blur', hideTooltip);
+  shelButton.addEventListener('click', hideTooltip);
+  shelfItem.addEventListener('dragstart', hideTooltip);
+  shelfItem.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') hideTooltip();
+  });
+
+  shelfItem.append(shelButton, tooltip);
   return shelfItem;
 }
