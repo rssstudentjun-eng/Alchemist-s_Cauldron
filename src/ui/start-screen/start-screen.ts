@@ -45,16 +45,7 @@ function openHelp(): void {
 
   reactions.slice(0, settings.reactionCount).forEach((reaction) => {
     const rule = document.createElement('li');
-    if (reaction.id === 'bubbling') {
-      rule.textContent =
-        'Bubbling: Fairy Dust + Caustic Acid increases Magic Power by 50% and costs 10 seconds.';
-    } else if (reaction.id === 'solar-frost') {
-      rule.textContent =
-        'Solar Frost: Dragon Tears + Frost Lotus sets Temperature to 0 and increases Density by 20%.';
-    } else {
-      rule.textContent =
-        'Volatile Mix: Phoenix Feather + Essence of the Void costs one life and empties the cauldron.';
-    }
+    rule.textContent = `${reaction.name}: ${reaction.description}`;
     rules.append(rule);
   });
   const reactionRule = document.createElement('li');
