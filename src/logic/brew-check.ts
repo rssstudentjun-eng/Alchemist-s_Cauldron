@@ -4,6 +4,7 @@ import { calculateCauldron } from './calculate-cauldron';
 import { getRecipe } from './recipe-generator';
 import { addTimeBonus, updateTime } from './timer';
 import { checkGameOver } from './end-game';
+import { clearCauldron } from './clear-cauldron';
 
 function isInRange(value: number, range: IRecipeRange): boolean {
   return (
@@ -31,7 +32,7 @@ export function brewCheck(): boolean | null {
     state.lives = Math.max(0, state.lives - 1);
     state.message = 'The potion failed. You lost 1 life.';
   }
-  state.cauldronIngredients = [];
+  clearCauldron();
   checkGameOver();
   return success;
 }
