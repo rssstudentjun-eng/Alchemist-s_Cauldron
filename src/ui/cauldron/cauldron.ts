@@ -53,7 +53,7 @@ export function createCauldron(onChange: () => void): HTMLElement {
     li.textContent = INGREDIENTS.find((ingredient) => ingredient.id === id)?.name ?? id;
     cauldronList.appendChild(li);
   });
-  // ========
+
   const cleanButton = document.createElement('button');
   cleanButton.type = 'button';
   cleanButton.disabled = !state.isStarted || state.cauldronIngredients.length === 0;
@@ -80,43 +80,29 @@ export function createCauldron(onChange: () => void): HTMLElement {
   //   { id: 2, name: 'John' },
   //   { id: 3, name: 'Mike' },
   // ];
-  //
-  // function renderUserList() {
+  // function renderComponent() {
   //   const list = document.createElement('ul');
-  //
-  //   list.addEventListener('click', (event) => {
-  //     if (!(event.target instanceof HTMLButtonElement)) return;
-  //
-  //     const item = event.target.closest('li');
-  //     if (!item || !list.contains(item)) return;
-  //     const id = item.id;
-  //     deleteUser(id);
-  //   });
-  //
-  //   function deleteUser(id) {
-  //     updateList();
-  //     console.log(id);
-  //   }
   //
   //   function updateList() {
   //     list.replaceChildren();
-  //
   //     users.forEach((user) => {
-  //       const li = document.createElement('li');
-  //
-  //       li.dataset.id = user.id;
-  //
-  //       const userDeleteBtn = document.createElement('button');
-  //       userDeleteBtn.textContent = 'Delete user';
-  //       userDeleteBtn.type = 'button';
-  //
-  //       li.textContent = user.name;
-  //       li.appendChild(userDeleteBtn);
-  //
-  //       list.appendChild(li);
+  //       let flag = false;
+  //       const elem = document.createElement('li');
+  //       elem.textContent = user.name;
+  //       const btn = document.createElement('button');
+  //       btn.textContent = 'change';
+  //       btn.addEventListener('click', () => {
+  //         flag = !flag;
+  //         btn.textContent = flag ? 'save' : 'change';
+  //       });
+  //       elem.append(btn);
+  //       elem.dataset.id = String(user.id);
+  //       list.append(elem);
   //     });
   //   }
+  //
   //   updateList();
+  //
   //   return list;
   // }
 
