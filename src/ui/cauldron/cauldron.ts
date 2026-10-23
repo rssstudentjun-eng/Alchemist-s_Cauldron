@@ -3,6 +3,7 @@ import { INGREDIENTS } from '../../data/ingredients';
 import { getSettings, state } from '../../state/game-state';
 import { brewCheck } from '../../logic/brew-check';
 import { addIngredient } from '../../logic/add-ingredient';
+import { pourOut } from '../../logic/pour-out';
 
 export function createCauldron(onChange: () => void): HTMLElement {
   const cauldron = document.createElement('div');
@@ -56,12 +57,11 @@ export function createCauldron(onChange: () => void): HTMLElement {
 
   const cleanButton = document.createElement('button');
   cleanButton.type = 'button';
-  cleanButton.disabled = !state.isStarted || state.cauldronIngredients.length === 0;
+  cleanButton.disabled = state.isPaused || state.cauldronIngredients.length === 0;
   cleanButton.classList.add('cauldronButton');
-  cleanButton.textContent = 'Clean Cauldron';
+  cleanButton.textContent = 'Pour Out';
   cleanButton.addEventListener('click', () => {
-    if (!state.isStarted || state.isPaused) return;
-    state.cauldronIngredients = [];
+    pourOut();
     onChange();
   });
 

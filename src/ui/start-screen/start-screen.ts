@@ -32,6 +32,7 @@ function openHelp(): void {
     `Start with ${settings.initialTime} seconds and ${settings.initialLives} lives.`,
     `Add up to ${settings.capacity} ingredients to the cauldron. Each ingredient has 2-15 uses.`,
     'Used ingredients are not returned when you clear or brew the cauldron.',
+    'Pour Out empties the cauldron and costs 10 seconds without losing a life.',
     `Match all three recipe ranges. Brewing allows a tolerance of +/-${settings.tolerance}.`,
     `A successful brew gives ${settings.scoreReward} points and ${settings.timeReward} seconds, up to ${settings.maximumTime}.`,
     'A failed brew costs one life. Both results empty the cauldron.',
