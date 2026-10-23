@@ -1,8 +1,17 @@
 .cauldron {
+  position: relative;
   background: url('../../assets/boul-2.png') center / contain no-repeat;
   min-height: 300px;
   color: white;
   font-size: 40px;
+
+  &.isSuccess {
+    animation: success 700ms ease-out;
+  }
+
+  &.isExplosion {
+    animation: explosion 500ms ease-out;
+  }
 }
 
 .cauldronButton {
@@ -22,13 +31,41 @@
 }
 
 .cauldronList {
-  color: darkgreen;
-  max-width: 50%;
+  position: absolute;
+  bottom: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 65%;
+  pointer-events: none;
 }
 
-.cauldronList li {
-  border: 1px solid darkgreen;
-  border-radius: 5px;
-  margin-top: 10px;
-  padding: 5px;
+.floatingIngredient {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  animation: ingredientFloat 2s ease-in-out infinite;
+}
+
+.cauldronList li:nth-child(even) .floatingIngredient {
+  animation-delay: -1s;
+}
+
+.isPaused .floatingIngredient {
+  animation-play-state: paused;
+}
+
+@keyframes ingredientFloat {
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floatingIngredient {
+    animation: none;
+  }
 }
