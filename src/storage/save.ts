@@ -149,10 +149,13 @@ export function saveGame(): void {
 export function loadGame(): GameSave | null {
   try {
     const saved: unknown = JSON.parse(localStorage.getItem(SAVE_KEY) ?? 'null');
+
     if (isValidSave(saved)) return saved;
+
+    clearSave();
+    return null;
   } catch {
-    // Invalid JSON and unavailable storage are handled like a missing save.
+    clearSave();
+    return null;
   }
-  clearSave();
-  return null;
 }

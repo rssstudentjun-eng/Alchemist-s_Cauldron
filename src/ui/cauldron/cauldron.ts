@@ -65,6 +65,8 @@ export function createCauldron(onChange: () => void): HTMLElement {
 
   const cleanButton = document.createElement('button');
   cleanButton.type = 'button';
+  cleanButton.dataset.action = 'pour-out';
+  cleanButton.setAttribute('aria-keyshortcuts', 'o');
   cleanButton.disabled = state.isPaused || state.cauldronIngredients.length === 0;
   cleanButton.classList.add('cauldronButton');
   cleanButton.textContent = 'Pour Out';
@@ -75,6 +77,8 @@ export function createCauldron(onChange: () => void): HTMLElement {
 
   const brewButton = document.createElement('button');
   brewButton.type = 'button';
+  brewButton.dataset.action = 'brew';
+  brewButton.setAttribute('aria-keyshortcuts', 'b');
   brewButton.disabled = !state.isStarted || state.cauldronIngredients.length === 0;
   brewButton.classList.add('cauldronButton');
   brewButton.textContent = 'Brew';
