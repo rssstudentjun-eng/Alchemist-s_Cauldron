@@ -2,7 +2,6 @@
 
 function animate(element: HTMLElement, className: string, animationName: string): void {
   element.classList.remove(className);
-  // Restart the animation when the same result happens twice in a row.
   void element.offsetWidth;
   element.classList.add(className);
 

@@ -177,5 +177,4 @@ export const recipes: IRecipe[] = [
     density: { min: 24, max: 34 },
     magicPower: { min: 37, max: 47 },
   },
-  //   =========
 ];

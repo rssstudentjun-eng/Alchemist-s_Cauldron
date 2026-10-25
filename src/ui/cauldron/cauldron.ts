@@ -84,7 +84,6 @@ export function createCauldron(onChange: () => void): HTMLElement {
     if (success !== null) showBrewResult(success);
   });
 
-  // =====
   cauldron.append(cauldronTitle, cleanButton, brewButton, cauldronList);
   return cauldron;
 }
