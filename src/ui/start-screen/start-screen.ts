@@ -29,15 +29,20 @@ function openHelp(): void {
   rules.classList.add('rulesList');
 
   [
-    `Start with ${settings.initialTime} seconds and ${settings.initialLives} lives.`,
-    `Add up to ${settings.capacity} ingredients to the cauldron. Each ingredient has 2-15 uses.`,
-    'Used ingredients are not returned when you clear or brew the cauldron.',
-    'Pour Out empties the cauldron and costs 10 seconds without losing a life.',
-    `Match all three recipe ranges. Brewing allows a tolerance of +/-${settings.tolerance}.`,
-    `A successful brew gives ${settings.scoreReward} points and ${settings.timeReward} seconds, up to ${settings.maximumTime}.`,
-    'A failed brew costs one life. Both results empty the cauldron.',
-    'The game ends when time or lives run out, or when both the shelf and cauldron are empty.',
-    'Pause freezes the game. Switching tabs pauses automatically.',
+    `You start with ${settings.initialTime} seconds and ${settings.initialLives} lives.`,
+    `You can add up to ${settings.capacity} ingredients to the cauldron. Each ingredient can be used 2 to 15 times.`,
+    'Ingredients are not returned after brewing or emptying the cauldron.',
+    'Pour Out clears the cauldron and takes 10 seconds, but you keep your lives.',
+    `To brew a potion, you need to match all three recipe ranges. A difference of +/-${settings.tolerance} is allowed.`,
+    `A successful potion gives you ${settings.scoreReward} points and ${settings.timeReward} extra seconds. The timer cannot go above ${settings.maximumTime} seconds.`,
+    'If you fail, you lose one life. The cauldron is emptied after every attempt.',
+    'The game is over when you run out of time or lives, or when there are no ingredients left on the shelf or in the cauldron.',
+    'You can pause the game at any time. It also pauses when you switch to another tab.',
+    'Press B to brew your potion.',
+    'Press O to empty the cauldron. This costs 10 seconds.',
+    'Press P to pause the game.',
+    'Use Tab to switch between buttons. Press Enter or Space to select a button or resume the game.',
+    'B, O and P only work while playing. They will not work when typing or when a dialog is open. Make sure your keyboard is set to English.',
   ].forEach((text) => {
     const rule = document.createElement('li');
     rule.textContent = text;
@@ -125,6 +130,8 @@ export function createGameScreen(
     newGame.addEventListener('click', actions.onStart);
     const pause = document.createElement('button');
     pause.type = 'button';
+    pause.dataset.action = 'pause';
+    pause.setAttribute('aria-keyshortcuts', 'p');
     pause.textContent = 'Pause';
     pause.addEventListener('click', actions.onPause);
     controls.append(newGame, pause);

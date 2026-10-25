@@ -2,6 +2,10 @@
   animation: explosion 500ms ease-out;
 }
 
+.gameOverScreen.isSuccess {
+  animation: success 700ms ease-out;
+}
+
 #app.isShaking {
   animation: shake 300ms;
 }
@@ -14,7 +18,7 @@
 
 @keyframes explosion {
   50% {
-    filter: brightness(2);
+    filter: brightness(2) drop-shadow(0 0 12px orangered);
     transform: scale(1.05);
   }
 }
@@ -32,6 +36,7 @@
 @media (prefers-reduced-motion: reduce) {
   .cauldron.isSuccess,
   .cauldron.isExplosion,
+  .gameOverScreen.isSuccess,
   .gameOverScreen.isExplosion,
   #app.isShaking {
     animation: none;

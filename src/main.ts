@@ -148,6 +148,41 @@ function renderGame(): void {
 
 renderGame();
 
+const shortcuts: Record<string, string> = {
+  b: 'brew',
+  o: 'pour-out',
+  p: 'pause',
+};
+
+document.addEventListener('keydown', (event) => {
+  if (!state.isStarted || state.isPaused || state.gameOverReason) return;
+  if (
+    event.defaultPrevented ||
+    event.repeat ||
+    event.isComposing ||
+    event.ctrlKey ||
+    event.altKey ||
+    event.metaKey
+  )
+    return;
+
+  const target = event.target;
+  if (
+    target instanceof HTMLElement &&
+    (target.closest('input, textarea, select') || target.isContentEditable)
+  )
+    return;
+  if (document.querySelector('dialog[open]')) return;
+
+  const action = shortcuts[event.key.toLowerCase()];
+  if (!action) return;
+  const button = gameContent.querySelector<HTMLButtonElement>(`button[data-action="${action}"]`);
+  if (!button || button.disabled) return;
+
+  event.preventDefault();
+  button.click();
+});
+
 document.addEventListener('visibilitychange', () => {
   if (document.hidden && state.isStarted && !state.isPaused) {
     openPause();
