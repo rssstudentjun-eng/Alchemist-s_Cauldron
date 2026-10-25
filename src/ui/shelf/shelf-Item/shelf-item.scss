@@ -1,6 +1,6 @@
 .shelfItemButton {
   padding: 20px;
-  border: 2px solid black;
+  border: 2px solid darkgreen;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -33,4 +33,25 @@
 
 .shelfItemButton:disabled {
   cursor: not-allowed;
+}
+
+.ingredientTooltip {
+  position: fixed;
+  z-index: 1000;
+  width: 240px;
+  max-width: calc(100vw - 16px);
+  padding: 12px;
+  border: 2px solid darkgreen;
+  border-radius: 10px;
+  background-color: #c8b9b9;
+  color: darkgreen;
+  font-size: 16px;
+  line-height: 1.5;
+  pointer-events: none;
+  box-shadow: 0 5px 15px rgb(0 0 0 / 20%);
+}
+
+.ingredientTooltip[hidden],
+.isPaused .ingredientTooltip {
+  display: none;
 }

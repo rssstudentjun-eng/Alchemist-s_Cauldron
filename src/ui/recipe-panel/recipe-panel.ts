@@ -9,7 +9,7 @@ export function createRecipePanel(): HTMLElement {
 
   const recipeName = document.createElement('h2');
   recipeName.classList.add('recipeName');
-  recipeName.textContent = state.recipe?.name ?? 'No recipe';
+  recipeName.textContent = `Recipe: ${state.recipe?.name ?? 'No recipe'}`;
 
   const counter = document.createElement('p');
   counter.classList.add('ingredientCounter');
@@ -31,7 +31,7 @@ export function createRecipePanel(): HTMLElement {
   const rangerFirstBlock = document.createElement('div');
   rangerFirstBlock.classList.add('rangerBlock');
   const rangerFirstBlockTitle = document.createElement('p');
-  rangerFirstBlockTitle.textContent = 'Temperature';
+  rangerFirstBlockTitle.textContent = 'Temperature:';
   const rangerFirstInfoBlock = document.createElement('p');
   rangerFirstInfoBlock.textContent = `${recipe?.temperature.min}...${recipe?.temperature.max}`;
   rangerFirstBlock.append(rangerFirstBlockTitle, rangerFirstInfoBlock);
@@ -39,7 +39,7 @@ export function createRecipePanel(): HTMLElement {
   const rangerSecondBlock = document.createElement('div');
   rangerSecondBlock.classList.add('rangerBlock');
   const rangerSecondBlockTitle = document.createElement('p');
-  rangerSecondBlockTitle.textContent = 'Density';
+  rangerSecondBlockTitle.textContent = 'Density:';
   const rangerSecondInfoBlock = document.createElement('p');
   rangerSecondInfoBlock.textContent = `${recipe?.density.min}...${recipe?.density.max}`;
   rangerSecondBlock.append(rangerSecondBlockTitle, rangerSecondInfoBlock);
@@ -47,7 +47,7 @@ export function createRecipePanel(): HTMLElement {
   const rangerThirdBlock = document.createElement('div');
   rangerThirdBlock.classList.add('rangerBlock');
   const rangerThirdBlockTitle = document.createElement('p');
-  rangerThirdBlockTitle.textContent = 'Magic Power';
+  rangerThirdBlockTitle.textContent = 'Magic Power:';
   const rangerThirdInfoBlock = document.createElement('p');
   rangerThirdInfoBlock.textContent = `${recipe?.magicPower.min}...${recipe?.magicPower.max}`;
   rangerThirdBlock.append(rangerThirdBlockTitle, rangerThirdInfoBlock);

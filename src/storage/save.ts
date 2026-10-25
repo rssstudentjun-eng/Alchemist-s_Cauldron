@@ -120,7 +120,7 @@ export function clearSave(): void {
   try {
     localStorage.removeItem(SAVE_KEY);
   } catch {
-    // The game remains playable when browser storage is unavailable.
+    return;
   }
 }
 
@@ -142,17 +142,20 @@ export function saveGame(): void {
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify(saved));
   } catch {
-    // The game remains playable when browser storage is unavailable.
+    return;
   }
 }
 
 export function loadGame(): GameSave | null {
   try {
     const saved: unknown = JSON.parse(localStorage.getItem(SAVE_KEY) ?? 'null');
+
     if (isValidSave(saved)) return saved;
+
+    clearSave();
+    return null;
   } catch {
-    // Invalid JSON and unavailable storage are handled like a missing save.
+    clearSave();
+    return null;
   }
-  clearSave();
-  return null;
 }

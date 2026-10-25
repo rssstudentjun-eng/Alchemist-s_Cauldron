@@ -20,15 +20,15 @@ export function addIngredient(id: string): boolean {
   const previousReactions = getActiveReactions(state.cauldronIngredients, state.difficulty);
   state.shelfStock[id] = quantity - 1;
   state.cauldronIngredients.push(id);
-  const newReactions = getActiveReactions(state.cauldronIngredients, state.difficulty).filter(
+  const firedNow = getActiveReactions(state.cauldronIngredients, state.difficulty).filter(
     (reaction) => !previousReactions.some((previous) => previous.id === reaction.id),
   );
-  newReactions.forEach((reaction) => {
+  firedNow.forEach((reaction) => {
     state.endTime -= reaction.timePenalty * 1000;
     state.lives = Math.max(0, state.lives - reaction.lifePenalty);
-    if (reaction.lifePenalty > 0) state.cauldronIngredients = [];
+    if (reaction.clearsCauldron) state.cauldronIngredients = [];
   });
-  state.message = newReactions.map((reaction) => reaction.name).join(', ');
+  state.message = firedNow.map((reaction) => reaction.name).join(', ');
   updateTime();
   checkGameOver();
   return true;

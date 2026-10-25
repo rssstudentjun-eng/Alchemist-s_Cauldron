@@ -12,14 +12,48 @@ export function createShelf(onChange: () => void): HTMLElement {
   shelfTitle.textContent = 'Shelf';
 
   const isCauldronFull = state.cauldronIngredients.length >= getSettings().capacity;
-  const shelfItems = getActualIngredients().map((ingredient) => {
+  const ingredients = state.isStarted ? getActualIngredients() : [];
+  const shelfItems = ingredients.map((ingredient) => {
     const quantity = state.shelfStock[ingredient.id] ?? 0;
     const item = shelfItem(ingredient, quantity, isCauldronFull);
     const button = item.querySelector<HTMLButtonElement>('.shelfItemButton');
 
+    item.draggable = quantity > 0 && !isCauldronFull && !state.isPaused;
+    item.addEventListener('dragstart', (event) => {
+      if (
+        !event.dataTransfer ||
+        !state.isStarted ||
+        state.isPaused ||
+        (state.shelfStock[ingredient.id] ?? 0) <= 0 ||
+        state.cauldronIngredients.length >= getSettings().capacity
+      ) {
+        event.preventDefault();
+        return;
+      }
+      event.dataTransfer.setData('text/plain', ingredient.id);
+      event.dataTransfer.setData('application/x-alchemist-ingredient', ingredient.id);
+      event.dataTransfer.effectAllowed = 'copy';
+    });
+    item.addEventListener('dragend', () => {
+      document.querySelector('.cauldron')?.classList.remove('isDragOver');
+    });
+
     button?.addEventListener('click', () => {
+      const hadFocus = document.activeElement === button;
       if (addIngredient(ingredient.id)) {
         onChange();
+        if (hadFocus) {
+          const nextButton =
+            document
+              .getElementById(ingredient.id)
+              ?.querySelector<HTMLButtonElement>('button:not(:disabled)') ??
+            document.querySelector<HTMLButtonElement>('.shelfItemButton:not(:disabled)') ??
+            document.querySelector<HTMLButtonElement>(
+              'button[data-action="brew"]:not(:disabled)',
+            ) ??
+            document.querySelector<HTMLButtonElement>('.gameOverScreen button');
+          nextButton?.focus({ preventScroll: true });
+        }
       }
     });
     return item;

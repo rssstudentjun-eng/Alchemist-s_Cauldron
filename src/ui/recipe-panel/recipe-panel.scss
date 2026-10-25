@@ -2,3 +2,32 @@
   color: red;
   font-weight: 700;
 }
+.recipePanel {
+  flex: 1;
+  min-width: 0;
+  padding: 10px;
+  border: 2px solid darkgreen;
+  border-radius: 10px;
+  font-size: 24px;
+}
+
+.rangerBlock {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.targetRangersBlock {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  flex-direction: column;
+}
+
+.recipeName {
+  padding: 10px;
+}
+.ingredientCounter {
+  padding: 10px;
+}

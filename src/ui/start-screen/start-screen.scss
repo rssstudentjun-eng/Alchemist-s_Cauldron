@@ -1,0 +1,122 @@
+.gameHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+}
+
+.gameInfo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  gap: 12px;
+}
+
+@media (max-width: 700px) {
+  .gameHeader {
+    flex-direction: column;
+  }
+
+  .gameInfo,
+  .gameHeader .recipePanel {
+    width: 100%;
+  }
+}
+
+.startField {
+  position: relative;
+  display: grid;
+  width: 100%;
+  grid-template-columns: 2fr 1fr;
+  align-items: start;
+  min-height: 300px;
+  gap: 20px;
+
+  .shelf,
+  .cauldron {
+    min-height: 300px;
+    min-width: 0;
+    padding: 20px;
+    font-size: 18px;
+    border: 4px darkgreen solid;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .startField {
+    grid-template-columns: 1fr;
+  }
+}
+
+.newGameButton {
+  padding: 12px 20px;
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: #c8b9b9;
+}
+
+.shelfTitle,
+.cauldronTitle {
+  font-size: 24px;
+  color: darkgreen;
+  text-transform: capitalize;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: bold;
+}
+.stats {
+  font-size: 24px;
+}
+
+.startGameButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.helpDialog,
+.settingsDialog {
+  margin: auto;
+  padding: 24px;
+  max-width: min(600px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  border: 4px solid darkgreen;
+  background-color: #c8b9b9;
+  border-radius: 10px;
+  color: darkgreen;
+
+  li {
+    margin-block: 12px;
+  }
+
+  .rulesList {
+    list-style: decimal;
+    padding: 20px;
+  }
+
+  button {
+    display: block;
+    margin-top: 12px;
+    padding: 10px 16px;
+    border: 1px solid black;
+    border-radius: 6px;
+  }
+
+  button[aria-pressed='true'] {
+    background-color: lightgray;
+  }
+
+  button:disabled {
+    opacity: 0.5;
+  }
+
+  &::backdrop {
+    background-color: rgb(0 0 0 / 60%);
+  }
+}
