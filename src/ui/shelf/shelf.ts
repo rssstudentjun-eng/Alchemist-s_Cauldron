@@ -39,8 +39,21 @@ export function createShelf(onChange: () => void): HTMLElement {
     });
 
     button?.addEventListener('click', () => {
+      const hadFocus = document.activeElement === button;
       if (addIngredient(ingredient.id)) {
         onChange();
+        if (hadFocus) {
+          const nextButton =
+            document
+              .getElementById(ingredient.id)
+              ?.querySelector<HTMLButtonElement>('button:not(:disabled)') ??
+            document.querySelector<HTMLButtonElement>('.shelfItemButton:not(:disabled)') ??
+            document.querySelector<HTMLButtonElement>(
+              'button[data-action="brew"]:not(:disabled)',
+            ) ??
+            document.querySelector<HTMLButtonElement>('.gameOverScreen button');
+          nextButton?.focus({ preventScroll: true });
+        }
       }
     });
     return item;
