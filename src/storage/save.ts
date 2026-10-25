@@ -120,7 +120,7 @@ export function clearSave(): void {
   try {
     localStorage.removeItem(SAVE_KEY);
   } catch {
-    // The game remains playable when browser storage is unavailable.
+    return;
   }
 }
 
@@ -142,7 +142,7 @@ export function saveGame(): void {
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify(saved));
   } catch {
-    // The game remains playable when browser storage is unavailable.
+    return;
   }
 }
 

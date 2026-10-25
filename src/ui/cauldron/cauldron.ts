@@ -4,6 +4,7 @@ import { getSettings, state } from '../../state/game-state';
 import { brewCheck } from '../../logic/brew-check';
 import { addIngredient } from '../../logic/add-ingredient';
 import { pourOut } from '../../logic/pour-out';
+import { showBrewResult } from './brew-animation';
 
 export function createCauldron(onChange: () => void): HTMLElement {
   const cauldron = document.createElement('div');
@@ -50,8 +51,15 @@ export function createCauldron(onChange: () => void): HTMLElement {
   });
 
   state.cauldronIngredients.forEach((id) => {
+    const ingredient = INGREDIENTS.find((item) => item.id === id);
+    if (!ingredient) return;
     const li = document.createElement('li');
-    li.textContent = INGREDIENTS.find((ingredient) => ingredient.id === id)?.name ?? id;
+    const icon = document.createElement('img');
+    icon.classList.add('floatingIngredient');
+    icon.src = ingredient.image;
+    icon.alt = ingredient.name;
+    icon.draggable = false;
+    li.append(icon);
     cauldronList.appendChild(li);
   });
 
@@ -71,42 +79,11 @@ export function createCauldron(onChange: () => void): HTMLElement {
   brewButton.classList.add('cauldronButton');
   brewButton.textContent = 'Brew';
   brewButton.addEventListener('click', () => {
-    brewCheck();
+    const success = brewCheck();
     onChange();
+    if (success !== null) showBrewResult(success);
   });
-  // ========
-  // let users = [
-  //   { id: 1, name: 'Alex' },
-  //   { id: 2, name: 'John' },
-  //   { id: 3, name: 'Mike' },
-  // ];
-  // function renderComponent() {
-  //   const list = document.createElement('ul');
-  //
-  //   function updateList() {
-  //     list.replaceChildren();
-  //     users.forEach((user) => {
-  //       let flag = false;
-  //       const elem = document.createElement('li');
-  //       elem.textContent = user.name;
-  //       const btn = document.createElement('button');
-  //       btn.textContent = 'change';
-  //       btn.addEventListener('click', () => {
-  //         flag = !flag;
-  //         btn.textContent = flag ? 'save' : 'change';
-  //       });
-  //       elem.append(btn);
-  //       elem.dataset.id = String(user.id);
-  //       list.append(elem);
-  //     });
-  //   }
-  //
-  //   updateList();
-  //
-  //   return list;
-  // }
 
-  // =====
   cauldron.append(cauldronTitle, cleanButton, brewButton, cauldronList);
   return cauldron;
 }

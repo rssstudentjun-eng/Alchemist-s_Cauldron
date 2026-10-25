@@ -18,7 +18,6 @@ export interface IReaction {
   apply: (values: CauldronValues) => CauldronValues;
 }
 
-// Medium uses the first two reactions. Hard also enables Volatile Mix.
 export const reactions: IReaction[] = [
   {
     id: 'bubbling',
