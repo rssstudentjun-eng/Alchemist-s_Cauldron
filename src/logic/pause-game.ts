@@ -30,4 +30,5 @@ export function exitToMenu(): void {
   state.score = 0;
   state.timeLeft = 0;
   state.lives = 0;
+  state.mistakes = 0;
 }

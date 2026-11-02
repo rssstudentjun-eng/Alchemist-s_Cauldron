@@ -3,6 +3,7 @@ import { DIFFICULTY_SETTINGS, type DifficultySettings } from '../data/difficulty
 import { createStock } from '../logic/stock';
 import { type Difficulty, type IRecipe, recipes } from '../data/recipes';
 import { getRecipe } from '../logic/recipe-generator';
+import { playerStats, savePlayerStats } from '../storage/player-stats';
 
 export interface GameState {
   cauldronIngredients: string[];
@@ -13,6 +14,7 @@ export interface GameState {
   isPaused: boolean;
   score: number;
   lives: number;
+  mistakes: number;
   timeLeft: number;
   endTime: number;
   gameOverReason: string;
@@ -30,6 +32,7 @@ export const state: GameState = {
   isPaused: false,
   score: 0,
   lives: 0,
+  mistakes: 0,
   timeLeft: 0,
   endTime: 0,
   gameOverReason: '',
@@ -48,12 +51,15 @@ export function startNewGame(): void {
   state.isPaused = false;
   state.score = 0;
   state.lives = settings.initialLives;
+  state.mistakes = 0;
   state.timeLeft = settings.initialTime;
   state.endTime = Date.now() + state.timeLeft * 1000;
   state.gameOverReason = '';
   state.gameOverDate = 0;
   state.resultSaved = false;
   state.message = '';
+  playerStats.gamesPlayed += 1;
+  savePlayerStats();
 }
 
 export function getSettings(): DifficultySettings {

@@ -1,5 +1,6 @@
 import { state } from '../state/game-state';
 import { clearSave } from '../storage/save';
+import { playerStats, savePlayerStats } from '../storage/player-stats';
 
 export function endGame(reason: string): void {
   if (!state.isStarted) return;
@@ -7,6 +8,8 @@ export function endGame(reason: string): void {
   state.gameOverReason = reason;
   state.gameOverDate = Date.now();
   state.resultSaved = false;
+  playerStats.bestScore = Math.max(playerStats.bestScore, state.score);
+  savePlayerStats();
   clearSave();
 }
 

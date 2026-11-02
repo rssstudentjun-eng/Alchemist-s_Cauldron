@@ -10,6 +10,7 @@ interface GameSave {
   score: number;
   timeLeft: number;
   lives: number;
+  mistakes?: number;
   activeRecipe: IRecipe;
   cauldronIngredients: string[];
   shelfStock: Record<string, number>;
@@ -24,6 +25,11 @@ export function isValidSave(data: unknown): data is GameSave {
   )
     return false;
   const settings = DIFFICULTY_SETTINGS[data.difficulty];
+  if (
+    'mistakes' in data &&
+    (typeof data.mistakes !== 'number' || !Number.isSafeInteger(data.mistakes) || data.mistakes < 0)
+  )
+    return false;
   if (!('status' in data) || (data.status !== 'playing' && data.status !== 'paused')) return false;
   if (
     !('score' in data) ||
@@ -134,6 +140,7 @@ export function saveGame(): void {
     score: state.score,
     timeLeft: state.timeLeft,
     lives: state.lives,
+    mistakes: state.mistakes,
     activeRecipe: state.recipe,
     cauldronIngredients: state.cauldronIngredients,
     shelfStock: state.shelfStock,
