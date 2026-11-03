@@ -41,6 +41,12 @@ function openAchievements(): void {
     }
     status.append(isUnlocked ? 'Unlocked' : 'Locked');
     info.append(name, description, status);
+    if (achievement.getProgress) {
+      const progress = document.createElement('p');
+      progress.classList.add('achievementProgress');
+      progress.textContent = `Progress: ${achievement.getProgress(playerStats)}`;
+      info.append(progress);
+    }
     item.append(icon, info);
     list.append(item);
   });
@@ -51,7 +57,9 @@ function openAchievements(): void {
   close.textContent = 'Close';
   close.addEventListener('click', () => dialog.close());
   dialog.addEventListener('close', () => dialog.remove());
-  dialog.append(title, list, close);
+  const hint = document.createElement('p');
+  hint.textContent = 'Play on different difficulties to discover more recipes.';
+  dialog.append(title, hint, list, close);
   document.body.append(dialog);
   dialog.showModal();
 }

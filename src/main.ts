@@ -9,6 +9,8 @@ import { loadGame, saveGame } from './storage/save';
 import { pauseGame, resumeGame, exitToMenu } from './logic/pause-game';
 import { createPauseDialog } from './ui/dialogs/pause-dialog';
 import { createGameScreen } from './ui/start-screen/start-screen';
+import { takeNewAchievements } from './logic/check-achievements';
+import { showAchievementNotification } from './ui/achievements/achievement-notification';
 
 const app = document.querySelector<HTMLDivElement>('#app');
 const gameContent = document.createElement('div');
@@ -121,6 +123,7 @@ function renderGame(): void {
   if (!app) return;
   updateTime();
   checkGameOver();
+  showAchievementNotification(takeNewAchievements());
 
   if (!state.isStarted) {
     stopTimer();

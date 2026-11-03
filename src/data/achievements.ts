@@ -12,6 +12,7 @@ export interface Achievement {
   title: string;
   description: string;
   icon: string;
+  getProgress?: (stats: PlayerStats) => string;
   isUnlocked: (stats: PlayerStats, game: GameState) => boolean;
 }
 
@@ -21,6 +22,7 @@ export const achievements: Achievement[] = [
     title: 'First Brew',
     description: 'Successfully brew your first potion.',
     icon: firstBrew,
+    getProgress: (stats) => `${Math.min(stats.successfulBrews, 1)} / 1`,
     isUnlocked: (stats) => stats.successfulBrews >= 1,
   },
   {
@@ -28,6 +30,7 @@ export const achievements: Achievement[] = [
     title: 'Master Alchemist',
     description: 'Successfully brew 50 potions.',
     icon: masterAlchemist,
+    getProgress: (stats) => `${Math.min(stats.successfulBrews, 50)} / 50`,
     isUnlocked: (stats) => stats.successfulBrews >= 50,
   },
   {
@@ -43,6 +46,7 @@ export const achievements: Achievement[] = [
     title: 'Explorer',
     description: 'Successfully brew 10 different recipes.',
     icon: explorer,
+    getProgress: (stats) => `${Math.min(stats.discoveredRecipeIds.length, 10)} / 10`,
     isUnlocked: (stats) => stats.discoveredRecipeIds.length >= 10,
   },
   {
@@ -50,6 +54,8 @@ export const achievements: Achievement[] = [
     title: 'Legendary Alchemist',
     description: 'Successfully brew every recipe.',
     icon: legendaryAlchemist,
+    getProgress: (stats) =>
+      `${Math.min(stats.discoveredRecipeIds.length, recipes.length)} / ${recipes.length}`,
     isUnlocked: (stats) => stats.discoveredRecipeIds.length >= recipes.length,
   },
 ];
