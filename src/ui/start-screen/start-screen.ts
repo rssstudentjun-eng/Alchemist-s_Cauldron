@@ -2,6 +2,7 @@ import { selectDifficulty, state } from '../../state/game-state';
 import { DIFFICULTY_SETTINGS } from '../../data/difficulty';
 import type { Difficulty } from '../../data/recipes';
 import { createLeaderboardButton } from '../leaderboard/leaderboard';
+import { createAchievementsButton } from '../achievements/achievements';
 import { reactions } from '../../data/reactions';
 import { loadGame } from '../../storage/save';
 import { createShelf } from '../shelf/shelf';
@@ -140,7 +141,7 @@ export function createGameScreen(
     settings.type = 'button';
     settings.textContent = 'Settings';
     settings.addEventListener('click', () => openSettings(actions.onChange));
-    controls.append(settings, createLeaderboardButton());
+    controls.append(settings, createLeaderboardButton(), createAchievementsButton());
     if (loadGame()) {
       const continueButton = document.createElement('button');
       continueButton.type = 'button';
