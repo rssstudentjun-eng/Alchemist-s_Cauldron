@@ -15,6 +15,7 @@ export interface GameState {
   score: number;
   lives: number;
   mistakes: number;
+  successfulBrews: number;
   timeLeft: number;
   endTime: number;
   gameOverReason: string;
@@ -33,6 +34,7 @@ export const state: GameState = {
   score: 0,
   lives: 0,
   mistakes: 0,
+  successfulBrews: 0,
   timeLeft: 0,
   endTime: 0,
   gameOverReason: '',
@@ -52,6 +54,7 @@ export function startNewGame(): void {
   state.score = 0;
   state.lives = settings.initialLives;
   state.mistakes = 0;
+  state.successfulBrews = 0;
   state.timeLeft = settings.initialTime;
   state.endTime = Date.now() + state.timeLeft * 1000;
   state.gameOverReason = '';

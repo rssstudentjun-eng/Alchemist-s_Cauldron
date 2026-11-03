@@ -6,6 +6,7 @@ import { addTimeBonus, updateTime } from './timer';
 import { checkGameOver } from './end-game';
 import { clearCauldron } from './clear-cauldron';
 import { playerStats, savePlayerStats } from '../storage/player-stats';
+import { checkAchievements } from './check-achievements';
 
 function isInRange(value: number, range: IRecipeRange): boolean {
   return (
@@ -25,6 +26,7 @@ export function brewCheck(): boolean | null {
     isInRange(totals.magicPower, state.recipe.magicPower);
 
   if (success) {
+    state.successfulBrews += 1;
     playerStats.successfulBrews += 1;
     if (!playerStats.discoveredRecipeIds.includes(state.recipe.id)) {
       playerStats.discoveredRecipeIds.push(state.recipe.id);
@@ -42,5 +44,6 @@ export function brewCheck(): boolean | null {
   savePlayerStats();
   clearCauldron();
   checkGameOver();
+  if (success) checkAchievements();
   return success;
 }

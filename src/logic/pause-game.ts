@@ -31,4 +31,5 @@ export function exitToMenu(): void {
   state.timeLeft = 0;
   state.lives = 0;
   state.mistakes = 0;
+  state.successfulBrews = 0;
 }

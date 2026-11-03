@@ -100,6 +100,8 @@ function continueGame(): void {
   state.timeLeft = saved.timeLeft;
   state.lives = saved.lives;
   state.mistakes = saved.mistakes ?? getSettings().initialLives - saved.lives;
+  state.successfulBrews =
+    saved.successfulBrews ?? Math.floor(saved.score / getSettings().scoreReward);
   state.recipe = saved.activeRecipe;
   state.cauldronIngredients = saved.cauldronIngredients;
   state.shelfStock = saved.shelfStock;

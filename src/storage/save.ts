@@ -11,6 +11,7 @@ interface GameSave {
   timeLeft: number;
   lives: number;
   mistakes?: number;
+  successfulBrews?: number;
   activeRecipe: IRecipe;
   cauldronIngredients: string[];
   shelfStock: Record<string, number>;
@@ -25,6 +26,13 @@ export function isValidSave(data: unknown): data is GameSave {
   )
     return false;
   const settings = DIFFICULTY_SETTINGS[data.difficulty];
+  if (
+    'successfulBrews' in data &&
+    (typeof data.successfulBrews !== 'number' ||
+      !Number.isSafeInteger(data.successfulBrews) ||
+      data.successfulBrews < 0)
+  )
+    return false;
   if (
     'mistakes' in data &&
     (typeof data.mistakes !== 'number' || !Number.isSafeInteger(data.mistakes) || data.mistakes < 0)
@@ -141,6 +149,7 @@ export function saveGame(): void {
     timeLeft: state.timeLeft,
     lives: state.lives,
     mistakes: state.mistakes,
+    successfulBrews: state.successfulBrews,
     activeRecipe: state.recipe,
     cauldronIngredients: state.cauldronIngredients,
     shelfStock: state.shelfStock,
