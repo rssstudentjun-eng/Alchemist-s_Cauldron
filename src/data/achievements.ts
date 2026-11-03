@@ -36,7 +36,7 @@ export const achievements: Achievement[] = [
   {
     id: 'perfect-run',
     title: 'Perfect Run',
-    description: 'Finish a game with at least one successful brew and no mistakes.',
+    description: 'Finish a game with at least one successful brew and without losing any lives.',
     icon: perfectRun,
     isUnlocked: (_stats, game) =>
       !game.isStarted && !!game.gameOverReason && game.mistakes === 0 && game.successfulBrews > 0,
