@@ -5,6 +5,8 @@ import { getRecipe } from './recipe-generator';
 import { addTimeBonus, updateTime } from './timer';
 import { checkGameOver } from './end-game';
 import { clearCauldron } from './clear-cauldron';
+import { playerStats, savePlayerStats } from '../storage/player-stats';
+import { checkAchievements } from './check-achievements';
 
 function isInRange(value: number, range: IRecipeRange): boolean {
   return (
@@ -24,15 +26,24 @@ export function brewCheck(): boolean | null {
     isInRange(totals.magicPower, state.recipe.magicPower);
 
   if (success) {
+    state.successfulBrews += 1;
+    playerStats.successfulBrews += 1;
+    if (!playerStats.discoveredRecipeIds.includes(state.recipe.id)) {
+      playerStats.discoveredRecipeIds.push(state.recipe.id);
+    }
     state.score += getSettings().scoreReward;
     addTimeBonus();
     state.recipe = getRecipe(recipes, state.difficulty);
     state.message = `Potion brewed! +${getSettings().scoreReward} points, +${getSettings().timeReward} seconds (maximum ${getSettings().maximumTime}).`;
   } else {
+    playerStats.failedBrews += 1;
+    state.mistakes += 1;
     state.lives = Math.max(0, state.lives - 1);
     state.message = 'The potion failed. You lost 1 life.';
   }
+  savePlayerStats();
   clearCauldron();
   checkGameOver();
+  if (success) checkAchievements();
   return success;
 }

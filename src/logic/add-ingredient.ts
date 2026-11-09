@@ -26,6 +26,7 @@ export function addIngredient(id: string): boolean {
   firedNow.forEach((reaction) => {
     state.endTime -= reaction.timePenalty * 1000;
     state.lives = Math.max(0, state.lives - reaction.lifePenalty);
+    if (reaction.lifePenalty > 0) state.mistakes += 1;
     if (reaction.clearsCauldron) state.cauldronIngredients = [];
   });
   state.message = firedNow.map((reaction) => reaction.name).join(', ');

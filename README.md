@@ -18,6 +18,22 @@ Choose a difficulty in Settings and press Start Game. Click or drag ingredients 
 
 The B, O and P shortcuts use the English keyboard layout and work only during active play. They are ignored on the start, pause and Game Over screens, while typing in text fields, and while a dialog is open.
 
+## Achievements
+
+Open Achievements from the main menu to view badges, unlock conditions and progress.
+
+- First Brew: successfully brew your first potion.
+- Master Alchemist: successfully brew 50 potions across games.
+- Perfect Run: finish a game with at least one successful brew and without losing any lives.
+- Explorer: successfully brew 10 different recipes.
+- Legendary Alchemist: successfully brew every recipe. Play on different difficulties to discover them all.
+
+Failed brews and reactions that cost lives prevent Perfect Run for the current game. Pour Out and time penalties do not. Running out of time or ingredients can still unlock it.
+
+New achievements appear in a notification for 6 seconds. Achievements unlocked together are shown in one message and are only awarded once.
+
+Statistics and unlocked achievements are saved in localStorage in the current browser and remain after a reload. Continue Game restores the successful brews and mistakes of the saved game. Clearing browser site data removes this progress.
+
 ## Run locally
 
 - `pnpm install` - install dependencies.

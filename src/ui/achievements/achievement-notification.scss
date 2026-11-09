@@ -1,0 +1,27 @@
+.achievementNotification {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: max-content;
+  max-width: min(420px, calc(100vw - 32px));
+  padding: 16px;
+  border: 2px solid darkgreen;
+  border-radius: 10px;
+  background-color: lightgreen;
+  color: darkgreen;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+  pointer-events: none;
+
+  &:empty {
+    display: none;
+  }
+
+  img {
+    flex-shrink: 0;
+  }
+}
